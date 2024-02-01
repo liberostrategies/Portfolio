@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PinkyPortfolio</string>
+
+    <string name="home">Home</string>
+    <string name="resume">Resume</string>
+
+    <string name="kotlin_timeline">Kotlin Timeline</string>
+    <string name="match_skills">Match Skills</string>
+</resources>
