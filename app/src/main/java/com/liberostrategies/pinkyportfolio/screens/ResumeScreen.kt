@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ResumeScreen() {
-    val resumeUrl = "https://github.com/liberostrategies/Portfolio/blob/dev/Downloads/PinkyRamos_Resume.pdf"
+    val resumeUrl = "https://github.com/liberostrategies/Portfolio/blob/dev/Docs/PinkyRamos_Resume.pdf"
     val context = LocalContext.current
     val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(resumeUrl)) }
     context.startActivity(intent)
