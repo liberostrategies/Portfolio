@@ -2,6 +2,7 @@
     <string name="app_name">PinkyPortfolio</string>
 
     <string name="home">Home</string>
+    <string name="pdf_resume">PDF Resume</string>
     <string name="resume">Resume</string>
 
     <string name="kotlin_timeline">Kotlin Timeline</string>
