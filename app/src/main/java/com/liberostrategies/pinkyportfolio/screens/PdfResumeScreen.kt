@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun ResumeScreen() {
+fun PdfResumeScreen() {
     val resumeUrl = "https://github.com/liberostrategies/Portfolio/blob/dev/Docs/PinkyRamos_Resume.pdf"
     val context = LocalContext.current
     val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(resumeUrl)) }

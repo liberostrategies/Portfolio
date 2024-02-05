@@ -33,7 +33,7 @@ sealed class PortfolioScreen(
 
     private object Resume : PortfolioScreen(
         route_resume,
-        R.string.resume,
+        R.string.pdf_resume,
         Icons.Filled.List
     )
 
