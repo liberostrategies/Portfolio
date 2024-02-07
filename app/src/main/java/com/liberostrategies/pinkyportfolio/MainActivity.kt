@@ -1,5 +1,6 @@
 package com.liberostrategies.pinkyportfolio
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -50,8 +51,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
-import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.screens.PdfResumeScreen
+import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
 
 class MainActivity : ComponentActivity() {
@@ -88,7 +89,8 @@ class MainActivity : ComponentActivity() {
                         PortfolioNavHost(
                             navController = navController,
                             //factory = factory,
-                            modifier = Modifier.padding(it)
+                            modifier = Modifier.padding(it),
+                            context = this
                         )
                     }
                 }
@@ -101,7 +103,8 @@ class MainActivity : ComponentActivity() {
 fun PortfolioNavHost(
     navController: NavHostController,
     //factory: ViewModelProvider.Factory?,
-    modifier: Modifier
+    modifier: Modifier,
+    context: Context
 ) {
     NavHost(
         navController = navController,
@@ -117,6 +120,7 @@ fun PortfolioNavHost(
             route = PortfolioScreen.route_resume,
         ) {
             PdfResumeScreen(
+                context = context
                 //viewModel = viewModel(factory = factory)
             )
         }

@@ -1,15 +1,12 @@
 package com.liberostrategies.pinkyportfolio.screens
 
-import android.content.Intent
-import android.net.Uri
+import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import com.liberostrategies.pinkyportfolio.domain.AndroidDownloader
 
 @Composable
-fun PdfResumeScreen() {
-    val resumeUrl = "https://github.com/liberostrategies/Portfolio/blob/dev/Docs/PinkyRamos_Resume.pdf"
-    val context = LocalContext.current
-    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(resumeUrl)) }
-    context.startActivity(intent)
+fun PdfResumeScreen(context: Context) {
+    val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
+    val downloader = AndroidDownloader(context)
+    downloader.downloadFile(resumeUrl)
 }
