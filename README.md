@@ -1,6 +1,8 @@
 # Installation
 This app is written in Jetpack Compose. Build it and run on an Android device.
 
+It is a Work in Progress.
+
 # Purpose
 This Portfolio App showcases my Kotlin experience in consideration of employment opportunities. I have
 
