@@ -96,6 +96,11 @@ dependencies {
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+
+    // Image Loading
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
     // Logger
     implementation("co.touchlab:kermit:2.0.2")
 
