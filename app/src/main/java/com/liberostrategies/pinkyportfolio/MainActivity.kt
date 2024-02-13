@@ -297,7 +297,7 @@ fun WristAwayApp(
                 ),
             ) {
                 Text(
-                    text = "v$version",
+                    text = version,
                     color = textColor,
                     modifier = Modifier.padding(5.dp),
                     textDecoration = TextDecoration.Underline,
@@ -359,13 +359,6 @@ fun WristAwayApp(
                 textDecoration = TextDecoration.Underline,
                 fontWeight = FontWeight.Bold,
                 fontSize = fontSize,
-            )
-            Text(
-                text = "${repoName(repo)}\n",
-                lineHeight = 10.sp,
-                color = textColor,
-                modifier = Modifier.padding(5.dp),
-                fontSize = 8.sp
             )
             Text(
                 text = tech,

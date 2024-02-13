@@ -59,14 +59,14 @@ fun KotlinTimelineScreen() {
 
         items(1) {
             WristAwayApp(
-                "1.0", "https://github.com/liberostrategies/WristAwayJ", "Java, Views, Wear OS",
+                "WristAway v1.0", "https://github.com/liberostrategies/WristAwayJ", "Java, Views, Wear OS",
                 background = Color(red = 0, green = 170, blue = 149),
                 height = 400.dp,
                 topPadding = 320.dp,
             )
 
             WristAwayApp(
-                "1.1", "https://github.com/liberostrategies/WristAwayK", "Kotlin, Views, Wear OS",
+                "WristAway v1.1", "https://github.com/liberostrategies/WristAwayK", "Kotlin, Views, Wear OS",
                 appLinks = "Download App from \nhttps://play.google.com/store/apps/details?id=com.liberostrategies.wristawayscoring",
                 background = Color(red = 165, green = 23, blue = 232),
                 height = 315.dp,
@@ -76,7 +76,7 @@ fun KotlinTimelineScreen() {
 
         items(1) {
             WristAwayApp(
-                "Pro 1.0", "https://github.com/liberostrategies/WristAwayKMP", "Kotlin, Compose Multiplatform",
+                "WristAway Pro v1.0", "https://github.com/liberostrategies/WristAwayKMP", "Kotlin, Compose Multiplatform",
                 background = Color(red = 106, green = 43, blue = 146),
                 height = 110.dp,
                 topPadding = 5.dp,
