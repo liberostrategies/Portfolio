@@ -71,7 +71,7 @@ fun PdfResumeScreen(context: Context) {
             Objective(resumeDoc)
         }
 
-        for (i in 0..<companyCount) {
+        for (i in (companyCount-1) downTo 0) {
             item {
                 Company(i, docCompanies)
             }
@@ -190,7 +190,7 @@ fun Company(
                 )
             }
 
-            for (i in 0..<jobCount) {
+            for (i in (jobCount-1) downTo 0) {
                 Job(i, docCompany)
             }
         }
