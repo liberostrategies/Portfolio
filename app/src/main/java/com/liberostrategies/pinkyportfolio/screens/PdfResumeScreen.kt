@@ -2,6 +2,7 @@ package com.liberostrategies.pinkyportfolio.screens
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import coil.compose.AsyncImage
@@ -47,7 +50,7 @@ fun PdfResumeScreen(context: Context) {
         }
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         item {
@@ -143,16 +146,19 @@ fun Company(
     idxCompany: Int,
     docCompanies: DocumentReference
 ) {
-    val docCompany0 = docCompanies.collection("company${idxCompany}").document("info${idxCompany}")
+    val docCompany = docCompanies.collection("company${idxCompany}")
+    val docCompanyInfo = docCompany.document("info${idxCompany}")
     var name by remember { mutableStateOf("TBD") }
     var location by remember { mutableStateOf("TBD") }
-    docCompany0.get()
+    var jobCount by remember { mutableIntStateOf(0) }
+    docCompanyInfo.get()
         .addOnSuccessListener { document ->
             if (document != null) {
                 Logger.d("ResumeTypeScreen") { "Company${idxCompany} data: ${document.data}" }
                 Logger.d("ResumeTypeScreen") { "Company${idxCompany} name: ${document.data?.get("name")}" }
                 name = document.data?.get("name").toString()
                 location = document.data?.get("location").toString()
+                jobCount = document.data?.get("jobcount").toString().toInt()
             }
         }
 
@@ -163,24 +169,93 @@ fun Company(
         modifier = Modifier
             .fillMaxWidth()
     ) {
+        Column() {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = name,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+                    textAlign = TextAlign.Start,
+                    textDecoration = TextDecoration.Underline
+                )
+                Text(
+                    text = location,
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                        .weight(1f),
+                    textAlign = TextAlign.End,
+                )
+            }
+
+            for (i in 0..<jobCount) {
+                Job(i, docCompany)
+            }
+        }
+    }
+}
+
+@Composable
+fun Job(
+    idxJob: Int,
+    docCompany: CollectionReference
+) {
+    val docJob = docCompany.document("job${idxJob}")
+    var title by remember { mutableStateOf("TBD") }
+    var startdate by remember { mutableStateOf("TBD") }
+    var enddate by remember { mutableStateOf("TBD") }
+    var duties by remember { mutableStateOf("TBD") }
+    var tech by remember { mutableStateOf("TBD") }
+    docJob.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("ResumeTypeScreen") { "Job${idxJob} data: ${document.data}" }
+                Logger.d("ResumeTypeScreen") { "Job${idxJob} name: ${document.data?.get("title")}" }
+                title = document.data?.get("title").toString()
+                startdate = document.data?.get("startdate").toString()
+                enddate = document.data?.get("enddate").toString()
+                duties = document.data?.get("duties").toString()
+                tech = document.data?.get("tech").toString()
+            }
+        }
+
+    Column (
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
         ) {
             Text(
-                text = name,
+                text = title,
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+                    .weight(0.8f),
                 textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold,
             )
             Text(
-                text = location,
+                text = "$startdate - $enddate",
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp, top = 8.dp)
                     .weight(1f),
                 textAlign = TextAlign.End,
             )
         }
-    }
 
+        Text(
+            text = duties,
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            textAlign = TextAlign.Start,
+        )
+        Text(
+            text = tech,
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            textAlign = TextAlign.Start,
+            fontStyle = FontStyle.Italic
+        )
+    }
 }
