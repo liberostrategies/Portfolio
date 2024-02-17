@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.touchlab.kermit.Logger
-import coil.compose.AsyncImage
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
@@ -36,8 +35,6 @@ import com.liberostrategies.pinkyportfolio.domain.AndroidDownloader
 @Composable
 fun PdfResumeScreen(context: Context) {
     val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
-    val resumePage1Url = "https://liberostrategies.com/downloads/PinkyRamos_ResumeP1.png"
-    val resumePage2Url = "https://liberostrategies.com/downloads/PinkyRamos_ResumeP2.png"
 
     val db = Firebase.firestore
     val resumeDoc = db.collection("resume")
@@ -54,29 +51,6 @@ fun PdfResumeScreen(context: Context) {
         verticalArrangement = Arrangement.spacedBy(15.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        item {
-            AsyncImage(
-                model = resumePage1Url,
-                contentDescription = "Resume Page 1"
-            )
-        }
-        item {
-            AsyncImage(
-                model = resumePage2Url,
-                contentDescription = "Resume Page 2"
-            )
-        }
-
-
-        item {
-            Objective(resumeDoc)
-        }
-
-        for (i in (companyCount-1) downTo 0) {
-            item {
-                Company(i, docCompanies)
-            }
-        }
 
         item {
             Button(
@@ -85,7 +59,17 @@ fun PdfResumeScreen(context: Context) {
                     downloader.downloadFile(resumeUrl)
                 }
             ) {
-                Text("Download PDF")
+                Text("Download Resume PDF")
+            }
+        }
+
+        item {
+            Objective(resumeDoc)
+        }
+
+        for (i in (companyCount-1) downTo 0) {
+            item {
+                Company(i, docCompanies)
             }
         }
     }
