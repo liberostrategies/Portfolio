@@ -38,8 +38,6 @@ import com.liberostrategies.pinkyportfolio.domain.AndroidDownloader
 
 @Composable
 fun ResumeScreen(context: Context) {
-    val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
-
     val db = Firebase.firestore
     val resumeDoc = db.collection("resume")
     var companyCount by remember { mutableIntStateOf(0) }
@@ -56,16 +54,7 @@ fun ResumeScreen(context: Context) {
         modifier = Modifier.fillMaxSize()
     ) {
 
-        item {
-            Button(
-                onClick = {
-                    val downloader = AndroidDownloader(context)
-                    downloader.downloadFile(resumeUrl)
-                }
-            ) {
-                Text("Download Resume PDF")
-            }
-        }
+        item { DownloadResume(context) }
 
         item {
             Objective(resumeDoc)
@@ -76,6 +65,20 @@ fun ResumeScreen(context: Context) {
                 Company(i, docCompanies)
             }
         }
+    }
+}
+
+@Composable
+fun DownloadResume(context: Context) {
+    val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
+
+    Button(
+        onClick = {
+            val downloader = AndroidDownloader(context)
+            downloader.downloadFile(resumeUrl)
+        }
+    ) {
+        Text("Download Resume PDF")
     }
 }
 
@@ -111,20 +114,21 @@ fun Objective(resumeDoc: CollectionReference) {
             text = whoami,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold
         )
         Text (
             text = description,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp),
-            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = github,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Bold
         )
     }
@@ -168,14 +172,14 @@ fun Company(
                     text = name,
                     modifier = Modifier
                         .weight(1f),
-                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.bodyLarge,
                     textDecoration = TextDecoration.Underline
                 )
                 Text(
                     text = location,
                     modifier = Modifier,
                     textAlign = TextAlign.End,
-                    fontSize = 12.sp
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 
@@ -217,36 +221,33 @@ fun Job(
     ) {
         Row(
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = title,
                 modifier = Modifier
                     .weight(1f),
-                textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = "$startdate - $enddate",
                 modifier = Modifier,
                 textAlign = TextAlign.End,
-                fontSize = 8.sp
-            )
+                style = MaterialTheme.typography.bodySmall            )
         }
 
         Text(
             text = duties,
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            textAlign = TextAlign.Start,
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = tech,
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+                .padding(bottom = 5.dp),
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic
         )
 
@@ -275,8 +276,7 @@ fun Notable(
 
     Text(
         text = "${Typography.bullet} $note",
-        modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-        textAlign = TextAlign.Start,
+        modifier = Modifier,
+        style = MaterialTheme.typography.bodyMedium
     )
 }
