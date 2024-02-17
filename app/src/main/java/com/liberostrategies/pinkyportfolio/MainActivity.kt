@@ -370,7 +370,3 @@ fun WristAwayApp(
         }
     }
 }
-
-private fun repoName(url: String): String {
-    return url.substringAfterLast('/')
-}
