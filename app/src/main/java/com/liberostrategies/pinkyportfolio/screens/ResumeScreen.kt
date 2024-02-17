@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
@@ -28,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -166,18 +166,20 @@ fun Company(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
             ) {
                 Text(
                     text = name,
                     modifier = Modifier
+                        .align(Alignment.Top)
                         .weight(1f),
                     style = MaterialTheme.typography.bodyLarge,
                     textDecoration = TextDecoration.Underline
                 )
                 Text(
                     text = location,
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically),
                     textAlign = TextAlign.End,
                     style = MaterialTheme.typography.bodySmall
                 )
@@ -226,15 +228,19 @@ fun Job(
             Text(
                 text = title,
                 modifier = Modifier
+                    .align(Alignment.Bottom)
                     .weight(1f),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = "$startdate - $enddate",
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(bottom = 5.dp)
+                    .align(Alignment.Bottom),
                 textAlign = TextAlign.End,
-                style = MaterialTheme.typography.bodySmall            )
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
         Text(
