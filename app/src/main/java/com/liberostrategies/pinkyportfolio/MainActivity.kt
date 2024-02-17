@@ -51,7 +51,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
-import com.liberostrategies.pinkyportfolio.screens.PdfResumeScreen
+import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
 
@@ -119,7 +119,7 @@ fun PortfolioNavHost(
         composable(
             route = PortfolioScreen.route_resume,
         ) {
-            PdfResumeScreen(
+            ResumeScreen(
                 context = context
                 //viewModel = viewModel(factory = factory)
             )

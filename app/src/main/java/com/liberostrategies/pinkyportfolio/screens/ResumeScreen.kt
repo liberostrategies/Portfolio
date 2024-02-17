@@ -1,6 +1,7 @@
 package com.liberostrategies.pinkyportfolio.screens
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +37,7 @@ import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.domain.AndroidDownloader
 
 @Composable
-fun PdfResumeScreen(context: Context) {
+fun ResumeScreen(context: Context) {
     val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
 
     val db = Firebase.firestore
@@ -78,28 +82,28 @@ fun PdfResumeScreen(context: Context) {
 @Composable
 fun Objective(resumeDoc: CollectionReference) {
     val docSummary = resumeDoc.document("summary")
-    var whoami by remember { mutableStateOf("TBD") }
-    var description by remember { mutableStateOf("TBD") }
-    var github by remember { mutableStateOf("TBD") }
+    var whoami by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var github by remember { mutableStateOf("") }
     docSummary.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Summary data: ${document.data}" }
                 whoami = document.data?.get("whoami").toString()
                 description = document.data?.get("description").toString()
                 github = document.data?.get("github").toString()
             } else {
-                Logger.d("ResumeTypeScreen") { "No such document" }
+                Logger.d("ResumeScreen") { "No such document" }
             }
         }
         .addOnFailureListener { exception ->
-            Logger.d("ResumeTypeScreen") { "get failed with ${exception}" }
+            Logger.d("ResumeScreen") { "get failed with ${exception}" }
         }
 
-    ElevatedCard(
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
+        border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -133,14 +137,12 @@ fun Company(
 ) {
     val docCompany = docCompanies.collection("company${idxCompany}")
     val docCompanyInfo = docCompany.document("info${idxCompany}")
-    var name by remember { mutableStateOf("TBD") }
-    var location by remember { mutableStateOf("TBD") }
+    var name by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
     var jobCount by remember { mutableIntStateOf(0) }
     docCompanyInfo.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Company${idxCompany} data: ${document.data}" }
-                Logger.d("ResumeTypeScreen") { "Company${idxCompany} name: ${document.data?.get("name")}" }
                 name = document.data?.get("name").toString()
                 location = document.data?.get("location").toString()
                 jobCount = document.data?.get("jobcount").toString().toInt()
@@ -190,17 +192,15 @@ fun Job(
     docCompany: CollectionReference
 ) {
     val docJob = docCompany.document("job${idxJob}")
-    var title by remember { mutableStateOf("TBD") }
-    var startdate by remember { mutableStateOf("TBD") }
-    var enddate by remember { mutableStateOf("TBD") }
-    var duties by remember { mutableStateOf("TBD") }
-    var tech by remember { mutableStateOf("TBD") }
+    var title by remember { mutableStateOf("") }
+    var startdate by remember { mutableStateOf("") }
+    var enddate by remember { mutableStateOf("") }
+    var duties by remember { mutableStateOf("") }
+    var tech by remember { mutableStateOf("") }
     var notablesCount by remember { mutableIntStateOf(0) }
     docJob.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Job${idxJob} data: ${document.data}" }
-                Logger.d("ResumeTypeScreen") { "Job${idxJob} name: ${document.data?.get("title")}" }
                 title = document.data?.get("title").toString()
                 startdate = document.data?.get("startdate").toString()
                 enddate = document.data?.get("enddate").toString()
@@ -264,12 +264,11 @@ fun Notable(
 ) {
     val docNotable = docNotables.document("notable${idxNotable}")
 
-    var note by remember { mutableStateOf("TBD") }
+    var note by remember { mutableStateOf("") }
 
     docNotable.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Notable${idxNotable} data: ${document.data}" }
                 note = document.data?.get("note").toString()
             }
         }
