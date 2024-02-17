@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,8 +52,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
-import com.liberostrategies.pinkyportfolio.screens.PdfResumeScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
+import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
 
 class MainActivity : ComponentActivity() {
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
             //val factory = ViewModelFactory(Repository(applicationContext))
             PinkyPortfolioTheme {
                 Surface(
+                    tonalElevation = 5.dp,
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
@@ -119,7 +121,7 @@ fun PortfolioNavHost(
         composable(
             route = PortfolioScreen.route_resume,
         ) {
-            PdfResumeScreen(
+            ResumeScreen(
                 context = context
                 //viewModel = viewModel(factory = factory)
             )
@@ -369,8 +371,4 @@ fun WristAwayApp(
             )
         }
     }
-}
-
-private fun repoName(url: String): String {
-    return url.substringAfterLast('/')
 }

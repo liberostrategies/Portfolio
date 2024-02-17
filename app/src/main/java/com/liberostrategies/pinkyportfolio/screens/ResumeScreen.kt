@@ -1,6 +1,7 @@
 package com.liberostrategies.pinkyportfolio.screens
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,13 +21,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -33,9 +37,7 @@ import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.domain.AndroidDownloader
 
 @Composable
-fun PdfResumeScreen(context: Context) {
-    val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
-
+fun ResumeScreen(context: Context) {
     val db = Firebase.firestore
     val resumeDoc = db.collection("resume")
     var companyCount by remember { mutableIntStateOf(0) }
@@ -52,16 +54,7 @@ fun PdfResumeScreen(context: Context) {
         modifier = Modifier.fillMaxSize()
     ) {
 
-        item {
-            Button(
-                onClick = {
-                    val downloader = AndroidDownloader(context)
-                    downloader.downloadFile(resumeUrl)
-                }
-            ) {
-                Text("Download Resume PDF")
-            }
-        }
+        item { DownloadResume(context) }
 
         item {
             Objective(resumeDoc)
@@ -76,30 +69,44 @@ fun PdfResumeScreen(context: Context) {
 }
 
 @Composable
+fun DownloadResume(context: Context) {
+    val resumeUrl = "https://liberostrategies.com/downloads/PinkyRamos_Resume.pdf"
+
+    Button(
+        onClick = {
+            val downloader = AndroidDownloader(context)
+            downloader.downloadFile(resumeUrl)
+        }
+    ) {
+        Text("Download Resume PDF")
+    }
+}
+
+@Composable
 fun Objective(resumeDoc: CollectionReference) {
     val docSummary = resumeDoc.document("summary")
-    var whoami by remember { mutableStateOf("TBD") }
-    var description by remember { mutableStateOf("TBD") }
-    var github by remember { mutableStateOf("TBD") }
+    var whoami by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var github by remember { mutableStateOf("") }
     docSummary.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Summary data: ${document.data}" }
                 whoami = document.data?.get("whoami").toString()
                 description = document.data?.get("description").toString()
                 github = document.data?.get("github").toString()
             } else {
-                Logger.d("ResumeTypeScreen") { "No such document" }
+                Logger.d("ResumeScreen") { "No such document" }
             }
         }
         .addOnFailureListener { exception ->
-            Logger.d("ResumeTypeScreen") { "get failed with ${exception}" }
+            Logger.d("ResumeScreen") { "get failed with ${exception}" }
         }
 
-    ElevatedCard(
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
+        border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -107,20 +114,21 @@ fun Objective(resumeDoc: CollectionReference) {
             text = whoami,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold
         )
         Text (
             text = description,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp),
-            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = github,
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Bold
         )
     }
@@ -133,14 +141,12 @@ fun Company(
 ) {
     val docCompany = docCompanies.collection("company${idxCompany}")
     val docCompanyInfo = docCompany.document("info${idxCompany}")
-    var name by remember { mutableStateOf("TBD") }
-    var location by remember { mutableStateOf("TBD") }
+    var name by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
     var jobCount by remember { mutableIntStateOf(0) }
     docCompanyInfo.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Company${idxCompany} data: ${document.data}" }
-                Logger.d("ResumeTypeScreen") { "Company${idxCompany} name: ${document.data?.get("name")}" }
                 name = document.data?.get("name").toString()
                 location = document.data?.get("location").toString()
                 jobCount = document.data?.get("jobcount").toString().toInt()
@@ -160,20 +166,22 @@ fun Company(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
             ) {
                 Text(
                     text = name,
                     modifier = Modifier
+                        .align(Alignment.Top)
                         .weight(1f),
-                    textAlign = TextAlign.Start,
+                    style = MaterialTheme.typography.bodyLarge,
                     textDecoration = TextDecoration.Underline
                 )
                 Text(
                     text = location,
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically),
                     textAlign = TextAlign.End,
-                    fontSize = 12.sp
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 
@@ -190,17 +198,15 @@ fun Job(
     docCompany: CollectionReference
 ) {
     val docJob = docCompany.document("job${idxJob}")
-    var title by remember { mutableStateOf("TBD") }
-    var startdate by remember { mutableStateOf("TBD") }
-    var enddate by remember { mutableStateOf("TBD") }
-    var duties by remember { mutableStateOf("TBD") }
-    var tech by remember { mutableStateOf("TBD") }
+    var title by remember { mutableStateOf("") }
+    var startdate by remember { mutableStateOf("") }
+    var enddate by remember { mutableStateOf("") }
+    var duties by remember { mutableStateOf("") }
+    var tech by remember { mutableStateOf("") }
     var notablesCount by remember { mutableIntStateOf(0) }
     docJob.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Job${idxJob} data: ${document.data}" }
-                Logger.d("ResumeTypeScreen") { "Job${idxJob} name: ${document.data?.get("title")}" }
                 title = document.data?.get("title").toString()
                 startdate = document.data?.get("startdate").toString()
                 enddate = document.data?.get("enddate").toString()
@@ -217,36 +223,37 @@ fun Job(
     ) {
         Row(
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = title,
                 modifier = Modifier
+                    .align(Alignment.Bottom)
                     .weight(1f),
-                textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = "$startdate - $enddate",
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(bottom = 5.dp)
+                    .align(Alignment.Bottom),
                 textAlign = TextAlign.End,
-                fontSize = 8.sp
+                style = MaterialTheme.typography.bodySmall
             )
         }
 
         Text(
             text = duties,
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-            textAlign = TextAlign.Start,
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = tech,
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+                .padding(bottom = 5.dp),
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic
         )
 
@@ -264,20 +271,18 @@ fun Notable(
 ) {
     val docNotable = docNotables.document("notable${idxNotable}")
 
-    var note by remember { mutableStateOf("TBD") }
+    var note by remember { mutableStateOf("") }
 
     docNotable.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("ResumeTypeScreen") { "Notable${idxNotable} data: ${document.data}" }
                 note = document.data?.get("note").toString()
             }
         }
 
     Text(
         text = "${Typography.bullet} $note",
-        modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
-        textAlign = TextAlign.Start,
+        modifier = Modifier,
+        style = MaterialTheme.typography.bodyMedium
     )
 }
