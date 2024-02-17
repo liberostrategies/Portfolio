@@ -31,7 +31,7 @@ fun KotlinTimelineScreen() {
                     "Software Engineer",
                     "DeNovix",
                     "C++, Qt, QML",
-                    height = 530.dp,
+                    height = 620.dp,
                 )
                 Job(
                     "AndroidCert AppDev",
