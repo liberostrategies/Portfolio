@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import co.touchlab.kermit.Logger
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.CollectionReference
@@ -169,7 +170,10 @@ fun Company(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Column() {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -177,16 +181,15 @@ fun Company(
                 Text(
                     text = name,
                     modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+                        .weight(1f),
                     textAlign = TextAlign.Start,
                     textDecoration = TextDecoration.Underline
                 )
                 Text(
                     text = location,
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                        .weight(1f),
+                    modifier = Modifier,
                     textAlign = TextAlign.End,
+                    fontSize = 12.sp
                 )
             }
 
@@ -208,6 +211,7 @@ fun Job(
     var enddate by remember { mutableStateOf("TBD") }
     var duties by remember { mutableStateOf("TBD") }
     var tech by remember { mutableStateOf("TBD") }
+    var notablesCount by remember { mutableIntStateOf(0) }
     docJob.get()
         .addOnSuccessListener { document ->
             if (document != null) {
@@ -218,29 +222,33 @@ fun Job(
                 enddate = document.data?.get("enddate").toString()
                 duties = document.data?.get("duties").toString()
                 tech = document.data?.get("tech").toString()
+                notablesCount = if (document.data?.get("notablescount") == null) 0 else document.data?.get("notablescount").toString().toInt()
             }
         }
 
+
     Column (
+        modifier = Modifier
+            .padding(2.dp)
     ) {
         Row(
             modifier = Modifier
+                .padding(8.dp)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = title,
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                    .weight(0.8f),
+                    .weight(1f),
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
             )
             Text(
                 text = "$startdate - $enddate",
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 8.dp)
-                    .weight(1f),
+                modifier = Modifier,
                 textAlign = TextAlign.End,
+                fontSize = 8.sp
             )
         }
 
@@ -257,5 +265,35 @@ fun Job(
             textAlign = TextAlign.Start,
             fontStyle = FontStyle.Italic
         )
+
+        val docNotables = docJob.collection("notables")
+        for (i in (notablesCount-1) downTo 0) {
+            Notable(i, docNotables)
+        }
     }
+}
+
+@Composable
+fun Notable(
+    idxNotable: Int,
+    docNotables: CollectionReference
+) {
+    val docNotable = docNotables.document("notable${idxNotable}")
+
+    var note by remember { mutableStateOf("TBD") }
+
+    docNotable.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("ResumeTypeScreen") { "Notable${idxNotable} data: ${document.data}" }
+                note = document.data?.get("note").toString()
+            }
+        }
+
+    Text(
+        text = "${Typography.bullet} $note",
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+        textAlign = TextAlign.Start,
+    )
 }
