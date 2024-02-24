@@ -1,12 +1,10 @@
-package com.liberostrategies.pinkyportfolio.data.framework
+package com.liberostrategies.pinkyportfolio.data.source
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.model.JobQualificationDataModel
-import com.liberostrategies.pinkyportfolio.data.source.IJobQualificationDataSource
 import co.touchlab.kermit.Logger
-import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
 
 class FirebaseDataSource : IJobQualificationDataSource {
     /****************************************************************************************
@@ -34,10 +32,9 @@ class FirebaseDataSource : IJobQualificationDataSource {
             .addOnSuccessListener { document ->
                 if (document != null) {
                     Logger.d(this.javaClass.simpleName) { "$category qualifications: ${document.data}" }
-                    var i: Int = 0
-                    var qual = ""
+                    var i = 0
                     while (document.data?.get("$i") != null) {
-                        qual = document.data?.get("$i").toString()
+                        val qual = document.data?.get("$i").toString()
                         listQualifications.add(JobQualificationDataModel(category, qual))
                         i++
                     }
