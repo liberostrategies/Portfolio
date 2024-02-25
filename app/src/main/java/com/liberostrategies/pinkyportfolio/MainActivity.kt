@@ -112,7 +112,6 @@ fun PortfolioNavHost(
     navController: NavHostController,
     modifier: Modifier,
     context: Context,
-    repoJobQual: IJobQualificationRepository,
 ) {
     NavHost(
         navController = navController,
