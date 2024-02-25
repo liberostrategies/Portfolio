@@ -1,6 +1,8 @@
 # Installation
 This app is written in Jetpack Compose. Build it and run on an Android device.
 
+It is a Work in Progress.
+
 # Purpose
 This Portfolio App showcases my Kotlin experience in consideration of employment opportunities. I have
 
@@ -23,5 +25,5 @@ This Portfolio App showcases my Kotlin experience in consideration of employment
   * Noticing many similarities between Compose and Qt/QML with their Declarative UI concepts.
 
 * Seeking Full-Time Android Developer Position
-  * To fulfill passion for Kotlin and Android. 
+  * Fulfill passion for Kotlin and Android. 
   * Grow skills with professional team of Mobile developers. 

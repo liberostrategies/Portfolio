@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "729441876180",
+    "project_id": "portfolio-faa08",
+    "storage_bucket": "portfolio-faa08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729441876180:android:ac24b4c137091e6cbe2341",
+        "android_client_info": {
+          "package_name": "com.liberostrategies.pinkyportfolio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwbQw17Pq37mskJDI-kRdX8k3bGPigTcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

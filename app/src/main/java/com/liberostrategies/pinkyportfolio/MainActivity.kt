@@ -1,5 +1,6 @@
 package com.liberostrategies.pinkyportfolio
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,9 +50,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
+import com.liberostrategies.pinkyportfolio.data.repo.IJobQualificationRepository
+import com.liberostrategies.pinkyportfolio.data.repo.JobQualificationsRepo
+import com.liberostrategies.pinkyportfolio.data.source.FirebaseDataSource
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
+import com.liberostrategies.pinkyportfolio.screens.MatchScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
-import com.liberostrategies.pinkyportfolio.screens.PdfResumeScreen
+import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,9 +65,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            //val factory = ViewModelFactory(Repository(applicationContext))
+
+            val db = FirebaseDataSource()
+            val repoJobQual = JobQualificationsRepo(db)
+
             PinkyPortfolioTheme {
                 Surface(
+                    tonalElevation = 5.dp,
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
@@ -87,8 +96,8 @@ class MainActivity : ComponentActivity() {
                         //KotlinTimeline() {}
                         PortfolioNavHost(
                             navController = navController,
-                            //factory = factory,
-                            modifier = Modifier.padding(it)
+                            modifier = Modifier.padding(it),
+                            context = this,
                         )
                     }
                 }
@@ -100,8 +109,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PortfolioNavHost(
     navController: NavHostController,
-    //factory: ViewModelProvider.Factory?,
-    modifier: Modifier
+    modifier: Modifier,
+    context: Context,
 ) {
     NavHost(
         navController = navController,
@@ -110,22 +119,18 @@ fun PortfolioNavHost(
     ) {
         composable(PortfolioScreen.route_home) {
             KotlinTimelineScreen(
-                //viewModel = viewModel(factory = factory)
             )
         }
         composable(
             route = PortfolioScreen.route_resume,
         ) {
-            PdfResumeScreen(
-                //viewModel = viewModel(factory = factory)
+            ResumeScreen(
+                context = context
             )
         }
-        // TODO:
-//        composable(PortfolioScreen.route_match) {
-////            MatchScreen(
-//                //viewModel = viewModel(factory = factory)
-////            )
-//        }
+        composable(PortfolioScreen.route_match) {
+            MatchScreen()
+        }
     }
 }
 
@@ -293,7 +298,7 @@ fun WristAwayApp(
                 ),
             ) {
                 Text(
-                    text = "v$version",
+                    text = version,
                     color = textColor,
                     modifier = Modifier.padding(5.dp),
                     textDecoration = TextDecoration.Underline,
@@ -357,13 +362,6 @@ fun WristAwayApp(
                 fontSize = fontSize,
             )
             Text(
-                text = "${repoName(repo)}\n",
-                lineHeight = 10.sp,
-                color = textColor,
-                modifier = Modifier.padding(5.dp),
-                fontSize = 8.sp
-            )
-            Text(
                 text = tech,
                 fontSize = fontSize,
                 lineHeight = 8.sp,
@@ -372,8 +370,4 @@ fun WristAwayApp(
             )
         }
     }
-}
-
-private fun repoName(url: String): String {
-    return url.substringAfterLast('/')
 }

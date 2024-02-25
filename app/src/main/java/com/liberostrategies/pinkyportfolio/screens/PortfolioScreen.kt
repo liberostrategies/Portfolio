@@ -17,7 +17,7 @@ sealed class PortfolioScreen(
         val screens = listOf(
             Home,
             Resume,
-//            Match  // TODO: TBD
+            Match
         )
 
         const val route_home = "home"
@@ -33,7 +33,7 @@ sealed class PortfolioScreen(
 
     private object Resume : PortfolioScreen(
         route_resume,
-        R.string.pdf_resume,
+        R.string.resume,
         Icons.Filled.List
     )
 
