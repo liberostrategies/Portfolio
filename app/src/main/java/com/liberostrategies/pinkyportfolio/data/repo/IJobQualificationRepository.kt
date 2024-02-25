@@ -10,7 +10,10 @@ interface IJobQualificationRepository {
 
     suspend fun readQualifications(
         category: String
-    ): List<JobQualificationDataModel>
+    ): MutableList<JobQualificationDataModel>
+
+//    suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
+    suspend fun readAllQualifications(): MutableList<JobQualificationDataModel>
 
     suspend fun readAllQualificationsAsJson(): String
 

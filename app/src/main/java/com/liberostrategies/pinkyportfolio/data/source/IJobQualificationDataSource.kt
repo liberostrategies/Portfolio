@@ -15,7 +15,11 @@ interface IJobQualificationDataSource {
 
     suspend fun readQualifications(
         category: String
-    ): List<JobQualificationDataModel>
+    ): MutableList<JobQualificationDataModel>
+
+    suspend fun readAllQualifications(): MutableList<JobQualificationDataModel>
+
+    suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
 
     /**
      * Returns JSON format mainly used for debug.

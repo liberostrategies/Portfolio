@@ -10,12 +10,13 @@ class FirebaseDataSource : IJobQualificationDataSource {
     /****************************************************************************************
      *  Access Firebase DB.
      ***************************************************************************************/
-    private var collectionJobQualifications: CollectionReference
+    private var mCollectionJobQualifications: CollectionReference
 
     init {
         val db = Firebase.firestore
-        collectionJobQualifications = db.collection("jobqualifications")
+        mCollectionJobQualifications = db.collection("jobqualifications")
     }
+
 
     override suspend fun createQualification(
         category: String,
@@ -24,9 +25,15 @@ class FirebaseDataSource : IJobQualificationDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun readQualifications(category: String): List<JobQualificationDataModel> {
+    var mListQualifications = mutableListOf<JobQualificationDataModel>()
+
+    override suspend fun getListQualifications(): MutableList<JobQualificationDataModel> {
+        return mListQualifications
+    }
+
+    override suspend fun readQualifications(category: String): MutableList<JobQualificationDataModel> {
         Logger.d(this.javaClass.simpleName) { "Category[$category] readQualifications for category [$category]" }
-        val docCategory = collectionJobQualifications.document(category)
+        val docCategory = mCollectionJobQualifications.document(category)
         val listQualifications = mutableListOf<JobQualificationDataModel>()
         docCategory.get()
             .addOnSuccessListener { document ->
@@ -34,20 +41,29 @@ class FirebaseDataSource : IJobQualificationDataSource {
                     Logger.d(this.javaClass.simpleName) { "$category qualifications: ${document.data}" }
                     var i = 0
                     while (document.data?.get("$i") != null) {
-                        val qual = document.data?.get("$i").toString()
-                        listQualifications.add(JobQualificationDataModel(category, qual))
+                        val q = document.data?.get("$i").toString()
+                        listQualifications.add(JobQualificationDataModel(category, q))
                         i++
                     }
+                    Logger.d(this.javaClass.simpleName) { "Qualifications 1[$listQualifications]" }
+                    mListQualifications = listQualifications
                 } else {
                     Logger.d(this.javaClass.simpleName) { "No such document" }
                 }
+                Logger.d(this.javaClass.simpleName) { "Qualifications 2[$listQualifications]" }
             }
             .addOnFailureListener { exception ->
-                Logger.d(this.javaClass.name) { "get failed with $exception" }
+                Logger.d(this.javaClass.simpleName) { "get failed with $exception" }
                 throw JobQualificationsDoNotExistException(exception.toString())
             }
-        Logger.d(this.javaClass.name) { "Category[$category] qualifications[$listQualifications]" }
+        Logger.d(this.javaClass.simpleName) { "Qualifications 3[$listQualifications]" }
         return listQualifications
+    }
+
+    override suspend fun readAllQualifications(): MutableList<JobQualificationDataModel> {
+        val list = mutableListOf<JobQualificationDataModel>()
+//        list.add(readQualifications("certifications"))
+        return list
     }
 
     override suspend fun readAllQualificationsAsJson(): String {
