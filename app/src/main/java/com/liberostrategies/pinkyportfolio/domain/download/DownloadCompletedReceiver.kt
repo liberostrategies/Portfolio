@@ -1,4 +1,4 @@
-package com.liberostrategies.pinkyportfolio.domain
+package com.liberostrategies.pinkyportfolio.domain.download
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
