@@ -36,9 +36,6 @@ class JobQualificationsViewModel(
                 is UseCaseResult.Error -> {
                     Logger.e("JobQualificationsViewModel") { "Error read job qualifications result for $category." }
                 }
-                else -> {
-                    Logger.e("JobQualificationsViewModel") { "Unhandled read all job qualifications result for $category." }
-                }
             }
         }
         return listJobQualifications
