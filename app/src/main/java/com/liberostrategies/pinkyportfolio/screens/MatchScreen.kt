@@ -29,12 +29,11 @@ import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.liberostrategies.pinkyportfolio.data.repo.IJobQualificationRepository
 import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
 import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
 
-private class JobQualifications() {
+private class JobQualifications {
     companion object {
         // Match Firebase keys
         const val CERTIFICATIONS = "certifications"
@@ -75,7 +74,6 @@ private class JobQualifications() {
 
 @Composable
 fun MatchScreen(
-    repoJobQual: IJobQualificationRepository,
 ) {
     val db1 = Firebase.firestore
     val collectionJobQuals = db1.collection("jobqualifications")
@@ -236,7 +234,7 @@ fun Category(
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
-        listQualifications.forEach { it ->
+        listQualifications.forEach {
             val (checkedState, onStateChange) = remember { mutableStateOf(true) }
             Row(
                 Modifier
