@@ -98,7 +98,6 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             modifier = Modifier.padding(it),
                             context = this,
-                            repoJobQual = repoJobQual,
                         )
                     }
                 }
