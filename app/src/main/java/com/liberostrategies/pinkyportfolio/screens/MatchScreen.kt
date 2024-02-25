@@ -1,6 +1,8 @@
 package com.liberostrategies.pinkyportfolio.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,9 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -75,12 +79,34 @@ private class JobQualifications {
 @Composable
 fun MatchScreen(
 ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        JobQualificationsList()
+        FilledTonalButton(
+            modifier = Modifier
+                .height(50.dp)
+                .padding(top = 5.dp),
+            onClick = { /*TODO*/ },
+            shape = RoundedCornerShape(5.dp)
+        ) {
+            Text("Match Job Qualifications to Skills")
+        }
+    }
+}
+
+@Composable
+fun ColumnScope.JobQualificationsList() {
     val db1 = Firebase.firestore
     val collectionJobQuals = db1.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .weight(1f)
     ) {
         item {
             Category(
@@ -180,7 +206,6 @@ fun MatchScreen(
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.CERTIFICATIONS)
             )
         }
-
     }
 }
 

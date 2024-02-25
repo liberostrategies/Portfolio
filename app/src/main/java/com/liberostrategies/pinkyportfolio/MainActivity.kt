@@ -98,7 +98,6 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             modifier = Modifier.padding(it),
                             context = this,
-                            repoJobQual = repoJobQual,
                         )
                     }
                 }
@@ -112,7 +111,6 @@ fun PortfolioNavHost(
     navController: NavHostController,
     modifier: Modifier,
     context: Context,
-    repoJobQual: IJobQualificationRepository,
 ) {
     NavHost(
         navController = navController,
@@ -131,9 +129,7 @@ fun PortfolioNavHost(
             )
         }
         composable(PortfolioScreen.route_match) {
-            MatchScreen(
-                repoJobQual,
-            )
+            MatchScreen()
         }
     }
 }
