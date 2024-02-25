@@ -131,9 +131,7 @@ fun PortfolioNavHost(
             )
         }
         composable(PortfolioScreen.route_match) {
-            MatchScreen(
-                repoJobQual,
-            )
+            MatchScreen()
         }
     }
 }
