@@ -12,8 +12,7 @@ class JobQualificationsRepo(private val dataSource: IJobQualificationDataSource)
     }
 
     override suspend fun readQualifications(category: String): MutableList<JobQualificationDataModel> {
-        dataSource.readQualifications(category)
-        return dataSource.getListQualifications()
+        return dataSource.readQualifications(category)
     }
 
     override suspend fun readAllQualifications(): MutableList<JobQualificationDataModel> {

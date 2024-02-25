@@ -25,19 +25,19 @@ class JobQualificationsViewModel(
 
             when (val result = jobQualificationsUseCases.readJobQualifications(category)) {
                 is UseCaseResult.Warning -> {
-                    Logger.e(this.javaClass.simpleName) { "No job qualifications result for $category." }
+                    Logger.e("JobQualificationsViewModel") { "No job qualifications result for $category." }
                 }
                 is UseCaseResult.Success -> {
                     result.data?.forEach {
-                        Logger.d(this.javaClass.simpleName) { ">>>>${it.category} ${it.qualification}" }
+                        Logger.d("JobQualificationsViewModel") { ">>>>${it.category} ${it.qualification}" }
                         listJobQualifications.add(JobQualificationDomainModel(it.category, it.qualification))
                     }
                 }
                 is UseCaseResult.Error -> {
-                    Logger.e(this.javaClass.simpleName) { "Error read job qualifications result for $category." }
+                    Logger.e("JobQualificationsViewModel") { "Error read job qualifications result for $category." }
                 }
                 else -> {
-                    Logger.e(this.javaClass.simpleName) { "Unhandled read all job qualifications result for $category." }
+                    Logger.e("JobQualificationsViewModel") { "Unhandled read all job qualifications result for $category." }
                 }
             }
         }

@@ -14,20 +14,29 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.repo.IJobQualificationRepository
+import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
 import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
-import com.liberostrategies.pinkyportfolio.ui.viewmodels.JobQualificationsViewModel
+import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
 
 private class JobQualifications() {
     companion object {
+        // Match Firebase keys
         const val CERTIFICATIONS = "certifications"
         const val DATABASES = "databases"
         const val DOCUMENTATION = "documentation"
@@ -42,13 +51,34 @@ private class JobQualifications() {
         const val TESTINGTOOLS = "testingtools"
         const val VERSIONCONTROL = "versioncontrol"
         const val WEBSERVER = "webserver"
+
+        //val MAP_JOB_QUALIFICATIONS = mutableMapOf<String, Pair<String, String>>()
+        val MAP_JOB_QUALIFICATIONS = mutableMapOf(
+            CERTIFICATIONS to "Certification",
+            DATABASES to "Database",
+            DOCUMENTATION to "Documentation",
+            FORMATTING to "Formatting",
+            GRAPHICS to "Graphics",
+            IDES to "IDE",
+            LANGUAGES to "Language",
+            OSES to "OS",
+            PROCESSES to "Process",
+            PROJECTTOOLS to "Project Tools",
+            REQUIREMENTS to "Requirements",
+            TESTINGTOOLS to "Testing Tools",
+            VERSIONCONTROL to "Version Control",
+            WEBSERVER to "Webserver",
+        )
     }
+
 }
+
 @Composable
 fun MatchScreen(
     repoJobQual: IJobQualificationRepository,
 ) {
-
+    val db1 = Firebase.firestore
+    val collectionJobQuals = db1.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -56,96 +86,141 @@ fun MatchScreen(
     ) {
         item {
             Category(
-                category = JobQualifications.CERTIFICATIONS,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.CERTIFICATIONS),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.LANGUAGES,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.LANGUAGES)
             )
         }
         item {
             Category(
-                category = JobQualifications.DATABASES,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.DATABASES),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.IDES,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.IDES)
             )
         }
         item {
             Category(
-                category = JobQualifications.DOCUMENTATION,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.DOCUMENTATION),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.DATABASES,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DATABASES)
             )
         }
         item {
             Category(
-                category = JobQualifications.FORMATTING,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.FORMATTING),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.TESTINGTOOLS,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.TESTINGTOOLS)
             )
         }
         item {
             Category(
-                category = JobQualifications.GRAPHICS,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.GRAPHICS),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.VERSIONCONTROL,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.VERSIONCONTROL)
             )
         }
         item {
             Category(
-                category = JobQualifications.IDES,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.IDES),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.WEBSERVER,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.WEBSERVER)
             )
         }
         item {
             Category(
-                category = JobQualifications.LANGUAGES,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.LANGUAGES),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.FORMATTING,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.FORMATTING)
             )
         }
         item {
             Category(
-                category = JobQualifications.OSES,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.OSES),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.GRAPHICS,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.GRAPHICS)
             )
         }
         item {
             Category(
-                category = JobQualifications.PROCESSES,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.PROCESSES),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.PROCESSES,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROCESSES)
             )
         }
         item {
             Category(
-                category = JobQualifications.PROJECTTOOLS,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.PROJECTTOOLS),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.PROJECTTOOLS,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROJECTTOOLS)
             )
         }
         item {
             Category(
-                category = JobQualifications.REQUIREMENTS,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.REQUIREMENTS),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.DOCUMENTATION,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DOCUMENTATION)
             )
         }
         item {
             Category(
-                category = JobQualifications.TESTINGTOOLS,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.TESTINGTOOLS),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.OSES,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.OSES)
             )
         }
         item {
             Category(
-                category = JobQualifications.VERSIONCONTROL,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.VERSIONCONTROL),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.REQUIREMENTS,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.REQUIREMENTS)
             )
         }
         item {
             Category(
-                category = JobQualifications.WEBSERVER,
-                jobQualifications = JobQualificationsViewModel(repoJobQual).readJobQualifications(JobQualifications.WEBSERVER),
+                collectionJobQuals = collectionJobQuals,
+                categoryKey = JobQualifications.CERTIFICATIONS,
+                categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.CERTIFICATIONS)
             )
         }
+
     }
 }
 
 @Composable
 fun Category(
-    category: String,
-    jobQualifications: List<JobQualificationDomainModel>
+    collectionJobQuals: CollectionReference,
+    categoryKey: String,
+    categoryDisplay: String,
 ) {
+    val docCertifications = collectionJobQuals.document(categoryKey)
+    val listQualifications = mutableListOf<JobQualificationDomainModel>()
+    var size by remember { mutableIntStateOf(0) }
+
+    // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
+    // Kept losing items in listQualifications.
+    docCertifications.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("MatchScreen") { "$categoryKey qualifications: ${document.data}" }
+                var i = 0
+                while (document.data?.get("$i") != null) {
+                    val q = document.data?.get("$i").toString()
+                    listQualifications.add(JobQualificationDomainModel(categoryKey, q))
+                    i++
+                    size = i
+                }
+                Logger.d("MatchScreen") { "Qualifications 1[$listQualifications]" }
+            } else {
+                Logger.d("MatchScreen") { "No such document" }
+            }
+            Logger.d("MatchScreen") { "Qualifications 2 size=${listQualifications.size} [$listQualifications]" }
+        }
+        .addOnFailureListener { exception ->
+            Logger.d("MatchScreen") { "get failed with $exception" }
+            throw JobQualificationsDoNotExistException(exception.toString())
+        }
+
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -153,14 +228,15 @@ fun Category(
         modifier = Modifier
             .fillMaxWidth()
     ) {
+        Logger.d("MatchScreen") { "size $size ${listQualifications.size}" }
         Text(
-            text = category,
+            text = categoryDisplay,
             modifier = Modifier
                 .padding(5.dp),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
-        jobQualifications.forEach { it ->
+        listQualifications.forEach { it ->
             val (checkedState, onStateChange) = remember { mutableStateOf(true) }
             Row(
                 Modifier
