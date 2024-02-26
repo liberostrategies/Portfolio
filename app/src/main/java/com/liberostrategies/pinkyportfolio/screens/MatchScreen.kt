@@ -1,5 +1,6 @@
 package com.liberostrategies.pinkyportfolio.screens
 
+import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -91,9 +92,7 @@ fun MatchScreen(
             .padding(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        JobQualificationsList(db, matchViewModel)
-
-        FilledTonalButton(
+        Button( // TODO: Make this a common button, because it is reused.
             modifier = Modifier
                 .height(50.dp)
                 .padding(top = 5.dp),
@@ -108,25 +107,28 @@ fun MatchScreen(
         ) {
             Text(matchButtonText)
         }
-/*
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
-                .background(Color.Yellow)
-        ) {
-            val collectionResume = db.collection("resume")
 
-            for (c in 0..9) {
-                for (j in 0..2) {
-                    item {
-                        ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j, matchViewModel)
+        JobQualificationsList(db, matchViewModel)
+
+        /*
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .background(Color.Yellow)
+                ) {
+                    val collectionResume = db.collection("resume")
+
+                    for (c in 0..9) {
+                        for (j in 0..2) {
+                            item {
+                                ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j, matchViewModel)
+                            }
+                        }
                     }
                 }
-            }
-        }
- */
+         */
     }
 }
 
