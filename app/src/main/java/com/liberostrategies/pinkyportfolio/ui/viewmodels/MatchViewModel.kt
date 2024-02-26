@@ -25,14 +25,24 @@ class MatchViewModel(
     )
 ) : ViewModel() {
 
-    private val setSkills = mutableSetOf<String>()
+    private val setJobQualifications = mutableSetOf<String>()
 
-    fun addSkill(techSkill: String) {
-        setSkills.add(techSkill)
+    fun addJobQualification(techSkill: String) {
+        setJobQualifications.add(techSkill)
+    }
+
+    fun getJobQualifications() : MutableSet<String> {
+        return setJobQualifications
+    }
+
+    private val setResumeSkills = mutableSetOf<String>()
+
+    fun addResumeSkill(techSkill: String) {
+        setResumeSkills.add(techSkill)
     }
 
     fun getTechSkills() : MutableSet<String> {
-        return setSkills
+        return setResumeSkills
     }
 
     private val skills = StringBuilder()

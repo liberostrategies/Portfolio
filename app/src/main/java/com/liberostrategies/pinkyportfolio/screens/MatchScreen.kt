@@ -1,6 +1,5 @@
 package com.liberostrategies.pinkyportfolio.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -26,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -93,7 +91,7 @@ fun MatchScreen(
             .padding(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        JobQualificationsList(db)
+        JobQualificationsList(db, matchViewModel)
 
         FilledTonalButton(
             modifier = Modifier
@@ -101,7 +99,8 @@ fun MatchScreen(
                 .padding(top = 5.dp),
             onClick = {
                 skills = ""
-                matchButtonText = matchViewModel.getTechSkills().toString()
+                //matchButtonText = matchViewModel.getTechSkills().toString()
+                matchButtonText = matchViewModel.getJobQualifications().toString()
                 Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)
@@ -131,7 +130,10 @@ fun MatchScreen(
 }
 
 @Composable
-fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
+fun ColumnScope.JobQualificationsList(
+    db: FirebaseFirestore,
+    matchViewModel: MatchViewModel
+) {
     val collectionJobQuals = db.collection("jobqualifications")
 
     LazyColumn(
@@ -142,6 +144,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.LANGUAGES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.LANGUAGES)
             )
@@ -149,6 +152,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.IDES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.IDES)
             )
@@ -156,6 +160,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.DATABASES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DATABASES)
             )
@@ -163,6 +168,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.TESTINGTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.TESTINGTOOLS)
             )
@@ -170,6 +176,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.VERSIONCONTROL,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.VERSIONCONTROL)
             )
@@ -177,6 +184,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.WEBSERVER,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.WEBSERVER)
             )
@@ -184,6 +192,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.FORMATTING,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.FORMATTING)
             )
@@ -191,6 +200,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.GRAPHICS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.GRAPHICS)
             )
@@ -198,6 +208,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.PROCESSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROCESSES)
             )
@@ -205,6 +216,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.PROJECTTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROJECTTOOLS)
             )
@@ -212,6 +224,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.DOCUMENTATION,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DOCUMENTATION)
             )
@@ -219,6 +232,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.OSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.OSES)
             )
@@ -226,6 +240,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.REQUIREMENTS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.REQUIREMENTS)
             )
@@ -233,6 +248,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.CERTIFICATIONS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.CERTIFICATIONS)
             )
@@ -243,6 +259,7 @@ fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
 @Composable
 fun Category(
     collectionJobQuals: CollectionReference,
+    matchViewModel: MatchViewModel,
     categoryKey: String,
     categoryDisplay: String,
 ) {
@@ -260,6 +277,7 @@ fun Category(
                 while (document.data?.get("$i") != null) {
                     val q = document.data?.get("$i").toString()
                     listQualifications.add(JobQualificationDomainModel(categoryKey, q))
+                    matchViewModel.addJobQualification(q)
                     i++
                     size = i
                 }

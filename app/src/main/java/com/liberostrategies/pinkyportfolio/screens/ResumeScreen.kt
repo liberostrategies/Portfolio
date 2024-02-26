@@ -218,7 +218,7 @@ fun Job(
                 enddate = document.data?.get("enddate").toString()
                 duties = document.data?.get("duties").toString()
                 tech = document.data?.get("tech").toString()
-                matchViewModel.addSkill(tech)
+                matchViewModel.addResumeSkill(tech)
                 notablesCount = if (document.data?.get("notablescount") == null) 0 else document.data?.get("notablescount").toString().toInt()
             }
         }
