@@ -27,8 +27,12 @@ class MatchViewModel(
 
     private val setJobQualifications = mutableSetOf<String>()
 
-    fun addJobQualification(techSkill: String) {
-        setJobQualifications.add(techSkill)
+    fun addJobQualification(jobQualification: String) {
+        setJobQualifications.add(jobQualification)
+    }
+
+    fun removeJobQualification(jobQualification: String) {
+        setJobQualifications.remove(jobQualification)
     }
 
     fun getJobQualifications() : MutableSet<String> {
@@ -39,6 +43,12 @@ class MatchViewModel(
 
     private fun addResumeSkill(techSkill: String) {
         setResumeSkills.add(techSkill)
+    }
+
+    private fun removeResumeSkill(techSkill: String) {
+        if (setResumeSkills.contains(techSkill)) {
+            setResumeSkills.remove(techSkill)
+        }
     }
     /**
      * [techSkills] contains commas. This method tokenizes each skill.
@@ -107,17 +117,18 @@ class MatchViewModel(
      */
     fun matchQualificationsWithSkills() : Int {
         var matches = 0
+        Logger.e(this.javaClass.simpleName) { "     setResumeSkills(${setResumeSkills.size}) = $setResumeSkills" }
+        Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
         for (skill in setResumeSkills) {
             Logger.e(this.javaClass.simpleName) { "skill = ${skill}" }
             if (setJobQualifications.contains(skill)) {
                 matches++
             } else {
                 Logger.e(this.javaClass.simpleName) { "No Match skill = ${skill}" }
+                //removeResumeSkill(skill)
             }
         }
 
-        Logger.e(this.javaClass.simpleName) { "     setResumeSkills(${setResumeSkills.size}) = $setResumeSkills" }
-        Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
         Logger.e(this.javaClass.simpleName) { "            matches ${matches}" }
         return ((matches.toDouble()/setResumeSkills.size) * 100).toInt()
     }

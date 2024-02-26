@@ -309,26 +309,36 @@ fun Category(
             fontWeight = FontWeight.Bold
         )
         listQualifications.forEach {
-            val (checkedState, onStateChange) = remember { mutableStateOf(true) }
+            var checkedState by remember { mutableStateOf(true) }
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .toggleable(
                         value = checkedState,
-                        onValueChange = { onStateChange(!checkedState) },
+                        onValueChange = { checkedState = !checkedState },
                         role = Role.Checkbox
                     )
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val qualification = it.qualification
                 Checkbox(
                     checked = checkedState,
-                    onCheckedChange = null // null recommended for accessibility with screenreaders
+                    onCheckedChange = {
+                        checkedState = it
+                        if (!it) {
+                            Logger.d("MatchScreen") { "Removing $qualification" }
+                            matchViewModel.removeJobQualification(qualification)
+                        } else {
+                            Logger.d("MatchScreen") { "Adding $qualification" }
+                            matchViewModel.addJobQualification(qualification)
+                        }
+                    }
                 )
 
                 Text(
-                    text = it.qualification,
+                    text = qualification,
                     modifier = Modifier
                         .padding(start = 10.dp),
                     textAlign = TextAlign.Start,
