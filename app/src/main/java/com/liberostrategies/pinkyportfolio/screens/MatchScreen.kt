@@ -100,7 +100,8 @@ fun MatchScreen(
             onClick = {
                 skills = ""
                 //matchButtonText = matchViewModel.getTechSkills().toString()
-                matchButtonText = matchViewModel.getJobQualifications().toString()
+                //matchButtonText = matchViewModel.getJobQualifications().toString()
+                matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
                 Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)

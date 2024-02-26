@@ -35,10 +35,19 @@ class MatchViewModel(
         return setJobQualifications
     }
 
-    private val setResumeSkills = mutableSetOf<String>()
+    private var setResumeSkills = mutableSetOf<String>()
 
-    fun addResumeSkill(techSkill: String) {
+    private fun addResumeSkill(techSkill: String) {
         setResumeSkills.add(techSkill)
+    }
+    /**
+     * [techSkills] contains commas. This method tokenizes each skill.
+     */
+    fun addResumeSkills(techSkills: String) {
+        val skills = techSkills.split(",").toHashSet()
+        for (untrimmedSkill in skills) {
+            addResumeSkill(untrimmedSkill.trim().removeSuffix("."))
+        }
     }
 
     fun getTechSkills() : MutableSet<String> {
@@ -91,5 +100,25 @@ class MatchViewModel(
             }
         }
         return listJobQualifications
+    }
+
+    /**
+     * Return percentage match of job qualifications with resume skills.
+     */
+    fun matchQualificationsWithSkills() : Int {
+        var matches = 0
+        for (skill in setResumeSkills) {
+            Logger.e(this.javaClass.simpleName) { "skill = ${skill}" }
+            if (setJobQualifications.contains(skill)) {
+                matches++
+            } else {
+                Logger.e(this.javaClass.simpleName) { "No Match skill = ${skill}" }
+            }
+        }
+
+        Logger.e(this.javaClass.simpleName) { "     setResumeSkills(${setResumeSkills.size}) = $setResumeSkills" }
+        Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
+        Logger.e(this.javaClass.simpleName) { "            matches ${matches}" }
+        return ((matches.toDouble()/setResumeSkills.size) * 100).toInt()
     }
 }
