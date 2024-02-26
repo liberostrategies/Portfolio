@@ -50,14 +50,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
-import com.liberostrategies.pinkyportfolio.data.repo.IJobQualificationRepository
 import com.liberostrategies.pinkyportfolio.data.repo.JobQualificationsRepo
-import com.liberostrategies.pinkyportfolio.data.source.FirebaseDataSource
+import com.liberostrategies.pinkyportfolio.data.repo.ResumeSkillsRepo
+import com.liberostrategies.pinkyportfolio.data.source.FirebaseJobQualificationDataSource
+import com.liberostrategies.pinkyportfolio.data.source.FirebaseResumeSkillDataSource
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
 import com.liberostrategies.pinkyportfolio.screens.MatchScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
+import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +68,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            val db = FirebaseDataSource()
-            val repoJobQual = JobQualificationsRepo(db)
+            val repoJobQual = JobQualificationsRepo(FirebaseJobQualificationDataSource())
+            val repoSkillsRepo = ResumeSkillsRepo(FirebaseResumeSkillDataSource())
+            val matchViewModel = MatchViewModel(repoJobQual, repoSkillsRepo)
 
             PinkyPortfolioTheme {
                 Surface(
@@ -98,6 +101,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             modifier = Modifier.padding(it),
                             context = this,
+                            matchViewModel = matchViewModel
                         )
                     }
                 }
@@ -111,6 +115,7 @@ fun PortfolioNavHost(
     navController: NavHostController,
     modifier: Modifier,
     context: Context,
+    matchViewModel: MatchViewModel
 ) {
     NavHost(
         navController = navController,
@@ -125,11 +130,12 @@ fun PortfolioNavHost(
             route = PortfolioScreen.route_resume,
         ) {
             ResumeScreen(
-                context = context
+                context = context,
+                matchViewModel = matchViewModel
             )
         }
         composable(PortfolioScreen.route_match) {
-            MatchScreen()
+            MatchScreen(matchViewModel)
         }
     }
 }

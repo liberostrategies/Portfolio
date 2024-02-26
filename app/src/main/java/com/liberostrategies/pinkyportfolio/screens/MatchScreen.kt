@@ -31,11 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
 import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
+import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 private class JobQualifications {
     companion object {
@@ -73,35 +75,67 @@ private class JobQualifications {
             WEBSERVER to "Webserver",
         )
     }
-
 }
 
 @Composable
 fun MatchScreen(
+    matchViewModel: MatchViewModel
 ) {
+    val db = Firebase.firestore
+    var skills by remember { mutableStateOf("") }
+    var matchButtonText by remember { mutableStateOf("Match Job Qualifications to Resume Skills") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        JobQualificationsList()
+        JobQualificationsList(db, matchViewModel)
+
         FilledTonalButton(
             modifier = Modifier
                 .height(50.dp)
                 .padding(top = 5.dp),
-            onClick = { /*TODO*/ },
+            onClick = {
+                skills = ""
+                //matchButtonText = matchViewModel.getTechSkills().toString()
+                //matchButtonText = matchViewModel.getJobQualifications().toString()
+                matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
+                Logger.d("MatchScreen") { matchButtonText }
+            },
             shape = RoundedCornerShape(5.dp)
         ) {
-            Text("Match Job Qualifications to Skills")
+            Text(matchButtonText)
         }
+/*
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth()
+                .background(Color.Yellow)
+        ) {
+            val collectionResume = db.collection("resume")
+
+            for (c in 0..9) {
+                for (j in 0..2) {
+                    item {
+                        ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j, matchViewModel)
+                    }
+                }
+            }
+        }
+ */
     }
 }
 
 @Composable
-fun ColumnScope.JobQualificationsList() {
-    val db1 = Firebase.firestore
-    val collectionJobQuals = db1.collection("jobqualifications")
+fun ColumnScope.JobQualificationsList(
+    db: FirebaseFirestore,
+    matchViewModel: MatchViewModel
+) {
+    val collectionJobQuals = db.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -111,6 +145,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.LANGUAGES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.LANGUAGES)
             )
@@ -118,6 +153,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.IDES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.IDES)
             )
@@ -125,6 +161,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.DATABASES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DATABASES)
             )
@@ -132,6 +169,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.TESTINGTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.TESTINGTOOLS)
             )
@@ -139,6 +177,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.VERSIONCONTROL,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.VERSIONCONTROL)
             )
@@ -146,6 +185,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.WEBSERVER,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.WEBSERVER)
             )
@@ -153,6 +193,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.FORMATTING,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.FORMATTING)
             )
@@ -160,6 +201,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.GRAPHICS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.GRAPHICS)
             )
@@ -167,6 +209,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.PROCESSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROCESSES)
             )
@@ -174,6 +217,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.PROJECTTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROJECTTOOLS)
             )
@@ -181,6 +225,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.DOCUMENTATION,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DOCUMENTATION)
             )
@@ -188,6 +233,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.OSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.OSES)
             )
@@ -195,6 +241,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.REQUIREMENTS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.REQUIREMENTS)
             )
@@ -202,6 +249,7 @@ fun ColumnScope.JobQualificationsList() {
         item {
             Category(
                 collectionJobQuals = collectionJobQuals,
+                matchViewModel = matchViewModel,
                 categoryKey = JobQualifications.CERTIFICATIONS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.CERTIFICATIONS)
             )
@@ -212,6 +260,7 @@ fun ColumnScope.JobQualificationsList() {
 @Composable
 fun Category(
     collectionJobQuals: CollectionReference,
+    matchViewModel: MatchViewModel,
     categoryKey: String,
     categoryDisplay: String,
 ) {
@@ -220,7 +269,7 @@ fun Category(
     var size by remember { mutableIntStateOf(0) }
 
     // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
-    // Kept losing items in listQualifications.
+    // Kept losing items in listQualifications after get().
     docCertifications.get()
         .addOnSuccessListener { document ->
             if (document != null) {
@@ -229,6 +278,7 @@ fun Category(
                 while (document.data?.get("$i") != null) {
                     val q = document.data?.get("$i").toString()
                     listQualifications.add(JobQualificationDomainModel(categoryKey, q))
+                    matchViewModel.addJobQualification(q)
                     i++
                     size = i
                 }
@@ -242,7 +292,6 @@ fun Category(
             Logger.d("MatchScreen") { "get failed with $exception" }
             throw JobQualificationsDoNotExistException(exception.toString())
         }
-
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -260,26 +309,36 @@ fun Category(
             fontWeight = FontWeight.Bold
         )
         listQualifications.forEach {
-            val (checkedState, onStateChange) = remember { mutableStateOf(true) }
+            var checkedState by remember { mutableStateOf(true) }
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .toggleable(
                         value = checkedState,
-                        onValueChange = { onStateChange(!checkedState) },
+                        onValueChange = { checkedState = !checkedState },
                         role = Role.Checkbox
                     )
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val qualification = it.qualification
                 Checkbox(
                     checked = checkedState,
-                    onCheckedChange = null // null recommended for accessibility with screenreaders
+                    onCheckedChange = {
+                        checkedState = it
+                        if (!it) {
+                            Logger.d("MatchScreen") { "Removing $qualification" }
+                            matchViewModel.removeJobQualification(qualification)
+                        } else {
+                            Logger.d("MatchScreen") { "Adding $qualification" }
+                            matchViewModel.addJobQualification(qualification)
+                        }
+                    }
                 )
 
                 Text(
-                    text = it.qualification,
+                    text = qualification,
                     modifier = Modifier
                         .padding(start = 10.dp),
                     textAlign = TextAlign.Start,
@@ -288,4 +347,49 @@ fun Category(
             }
         }
     }
+}
+
+fun countOccurrences(s: String, ch: Char): Int {
+    return s.count { it == ch }
+}
+
+@Composable
+fun ResumeSkills(
+    collectionResume: CollectionReference,
+    companyIndex: Int,
+    jobIndex: Int,
+    matchViewModel: MatchViewModel
+) {
+    Logger.d("MatchScreen:ResumeSkills") { "\n\nentering... $companyIndex, $jobIndex" }
+    val docCompanies = collectionResume.document("companies")
+    val collectionCompany = docCompanies.collection("company$companyIndex")
+    val docJob = collectionCompany.document("job$jobIndex")
+    var skills by remember { mutableStateOf("") }
+    docJob.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("MatchScreen:ResumeSkills") { "techSkills: ${document.data?.get("tech")}" }
+                if (document.data?.get("tech") != null) {
+                    val skill = document.data?.get("tech").toString()
+                    skills = skill
+                    //matchViewModel.addSkill(skill)
+                }
+                Logger.d("MatchScreen:ResumeSkills") { "Skills 1[$skills]" }
+            } else {
+                Logger.d("MatchScreen:ResumeSkills") { "No such document" }
+            }
+            Logger.d("MatchScreen:ResumeSkills") { "Skills 2[$skills]" }
+        }
+        .addOnFailureListener { exception ->
+            Logger.d("MatchScreen:ResumeSkills") { "get failed with $exception" }
+            throw JobQualificationsDoNotExistException(exception.toString())
+        }
+
+//Don't show.
+/*
+        Text(
+            text = "${skills.length} == ${countOccurrences(skills, ',')} == $skills",
+            //text = matchViewModel.getTechSkills().toString()
+        )
+ */
 }

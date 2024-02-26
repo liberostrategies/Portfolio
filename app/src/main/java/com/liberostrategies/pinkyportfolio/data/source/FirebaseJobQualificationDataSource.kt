@@ -6,7 +6,7 @@ import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.model.JobQualificationDataModel
 import co.touchlab.kermit.Logger
 
-class FirebaseDataSource : IJobQualificationDataSource {
+class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
     /****************************************************************************************
      *  Access Firebase DB.
      ***************************************************************************************/
