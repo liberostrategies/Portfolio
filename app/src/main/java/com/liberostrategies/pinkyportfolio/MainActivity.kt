@@ -130,7 +130,8 @@ fun PortfolioNavHost(
             route = PortfolioScreen.route_resume,
         ) {
             ResumeScreen(
-                context = context
+                context = context,
+                matchViewModel = matchViewModel
             )
         }
         composable(PortfolioScreen.route_match) {

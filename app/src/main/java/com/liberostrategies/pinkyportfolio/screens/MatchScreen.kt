@@ -77,7 +77,6 @@ private class JobQualifications {
             WEBSERVER to "Webserver",
         )
     }
-
 }
 
 @Composable
@@ -86,6 +85,7 @@ fun MatchScreen(
 ) {
     val db = Firebase.firestore
     var skills by remember { mutableStateOf("") }
+    var matchButtonText by remember { mutableStateOf("Match Job Qualifications to Resume Skills") }
 
     Column(
         modifier = Modifier
@@ -100,14 +100,15 @@ fun MatchScreen(
                 .height(50.dp)
                 .padding(top = 5.dp),
             onClick = {
-                Logger.d("MatchScreen") { "TBD clicked Match" }
                 skills = ""
+                matchButtonText = matchViewModel.getTechSkills().toString()
+                Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)
         ) {
-            Text("Match Job Qualifications to Resume Skills")
+            Text(matchButtonText)
         }
-
+/*
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             modifier = Modifier
@@ -120,11 +121,12 @@ fun MatchScreen(
             for (c in 0..9) {
                 for (j in 0..2) {
                     item {
-                        ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j)
+                        ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j, matchViewModel)
                     }
                 }
             }
         }
+ */
     }
 }
 
@@ -326,7 +328,8 @@ fun countOccurrences(s: String, ch: Char): Int {
 fun ResumeSkills(
     collectionResume: CollectionReference,
     companyIndex: Int,
-    jobIndex: Int
+    jobIndex: Int,
+    matchViewModel: MatchViewModel
 ) {
     Logger.d("MatchScreen:ResumeSkills") { "\n\nentering... $companyIndex, $jobIndex" }
     val docCompanies = collectionResume.document("companies")
@@ -340,6 +343,7 @@ fun ResumeSkills(
                 if (document.data?.get("tech") != null) {
                     val skill = document.data?.get("tech").toString()
                     skills = skill
+                    //matchViewModel.addSkill(skill)
                 }
                 Logger.d("MatchScreen:ResumeSkills") { "Skills 1[$skills]" }
             } else {
@@ -352,9 +356,11 @@ fun ResumeSkills(
             throw JobQualificationsDoNotExistException(exception.toString())
         }
 
+//Don't show.
+/*
         Text(
             text = "${skills.length} == ${countOccurrences(skills, ',')} == $skills",
+            //text = matchViewModel.getTechSkills().toString()
         )
-
-
+ */
 }
