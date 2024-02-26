@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -51,10 +50,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
+import com.liberostrategies.pinkyportfolio.data.repo.JobQualificationsRepo
+import com.liberostrategies.pinkyportfolio.data.repo.ResumeSkillsRepo
+import com.liberostrategies.pinkyportfolio.data.source.FirebaseJobQualificationDataSource
+import com.liberostrategies.pinkyportfolio.data.source.FirebaseResumeSkillDataSource
 import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
+import com.liberostrategies.pinkyportfolio.screens.MatchScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
+import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +67,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            //val factory = ViewModelFactory(Repository(applicationContext))
+
+            val repoJobQual = JobQualificationsRepo(FirebaseJobQualificationDataSource())
+            val repoSkillsRepo = ResumeSkillsRepo(FirebaseResumeSkillDataSource())
+            val matchViewModel = MatchViewModel(repoJobQual, repoSkillsRepo)
+
             PinkyPortfolioTheme {
                 Surface(
                     tonalElevation = 5.dp,
@@ -90,9 +99,9 @@ class MainActivity : ComponentActivity() {
                         //KotlinTimeline() {}
                         PortfolioNavHost(
                             navController = navController,
-                            //factory = factory,
                             modifier = Modifier.padding(it),
-                            context = this
+                            context = this,
+                            matchViewModel = matchViewModel
                         )
                     }
                 }
@@ -104,9 +113,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PortfolioNavHost(
     navController: NavHostController,
-    //factory: ViewModelProvider.Factory?,
     modifier: Modifier,
-    context: Context
+    context: Context,
+    matchViewModel: MatchViewModel
 ) {
     NavHost(
         navController = navController,
@@ -115,23 +124,19 @@ fun PortfolioNavHost(
     ) {
         composable(PortfolioScreen.route_home) {
             KotlinTimelineScreen(
-                //viewModel = viewModel(factory = factory)
             )
         }
         composable(
             route = PortfolioScreen.route_resume,
         ) {
             ResumeScreen(
-                context = context
-                //viewModel = viewModel(factory = factory)
+                context = context,
+                matchViewModel = matchViewModel
             )
         }
-        // TODO:
-//        composable(PortfolioScreen.route_match) {
-////            MatchScreen(
-//                //viewModel = viewModel(factory = factory)
-////            )
-//        }
+        composable(PortfolioScreen.route_match) {
+            MatchScreen(matchViewModel)
+        }
     }
 }
 
