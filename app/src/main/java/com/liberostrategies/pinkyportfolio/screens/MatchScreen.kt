@@ -1,5 +1,6 @@
 package com.liberostrategies.pinkyportfolio.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -25,17 +26,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
 import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
+import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 private class JobQualifications {
     companion object {
@@ -78,30 +82,55 @@ private class JobQualifications {
 
 @Composable
 fun MatchScreen(
+    matchViewModel: MatchViewModel
 ) {
+    val db = Firebase.firestore
+    var skills by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        JobQualificationsList()
+        JobQualificationsList(db)
+
         FilledTonalButton(
             modifier = Modifier
                 .height(50.dp)
                 .padding(top = 5.dp),
-            onClick = { /*TODO*/ },
+            onClick = {
+                Logger.d("MatchScreen") { "TBD clicked Match" }
+                skills = ""
+            },
             shape = RoundedCornerShape(5.dp)
         ) {
-            Text("Match Job Qualifications to Skills")
+            Text("Match Job Qualifications to Resume Skills")
+        }
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth()
+                .background(Color.Yellow)
+        ) {
+            val collectionResume = db.collection("resume")
+
+            for (c in 0..9) {
+                for (j in 0..2) {
+                    item {
+                        ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j)
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun ColumnScope.JobQualificationsList() {
-    val db1 = Firebase.firestore
-    val collectionJobQuals = db1.collection("jobqualifications")
+fun ColumnScope.JobQualificationsList(db: FirebaseFirestore) {
+    val collectionJobQuals = db.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -220,7 +249,7 @@ fun Category(
     var size by remember { mutableIntStateOf(0) }
 
     // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
-    // Kept losing items in listQualifications.
+    // Kept losing items in listQualifications after get().
     docCertifications.get()
         .addOnSuccessListener { document ->
             if (document != null) {
@@ -242,7 +271,6 @@ fun Category(
             Logger.d("MatchScreen") { "get failed with $exception" }
             throw JobQualificationsDoNotExistException(exception.toString())
         }
-
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -288,4 +316,45 @@ fun Category(
             }
         }
     }
+}
+
+fun countOccurrences(s: String, ch: Char): Int {
+    return s.count { it == ch }
+}
+
+@Composable
+fun ResumeSkills(
+    collectionResume: CollectionReference,
+    companyIndex: Int,
+    jobIndex: Int
+) {
+    Logger.d("MatchScreen:ResumeSkills") { "\n\nentering... $companyIndex, $jobIndex" }
+    val docCompanies = collectionResume.document("companies")
+    val collectionCompany = docCompanies.collection("company$companyIndex")
+    val docJob = collectionCompany.document("job$jobIndex")
+    var skills by remember { mutableStateOf("") }
+    docJob.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("MatchScreen:ResumeSkills") { "techSkills: ${document.data?.get("tech")}" }
+                if (document.data?.get("tech") != null) {
+                    val skill = document.data?.get("tech").toString()
+                    skills = skill
+                }
+                Logger.d("MatchScreen:ResumeSkills") { "Skills 1[$skills]" }
+            } else {
+                Logger.d("MatchScreen:ResumeSkills") { "No such document" }
+            }
+            Logger.d("MatchScreen:ResumeSkills") { "Skills 2[$skills]" }
+        }
+        .addOnFailureListener { exception ->
+            Logger.d("MatchScreen:ResumeSkills") { "get failed with $exception" }
+            throw JobQualificationsDoNotExistException(exception.toString())
+        }
+
+        Text(
+            text = "${skills.length} == ${countOccurrences(skills, ',')} == $skills",
+        )
+
+
 }
