@@ -114,6 +114,8 @@ class MatchViewModel(
 
     /**
      * Return percentage match of job qualifications with resume skills.
+     * TODO: Move this business logic to a use case.
+     * TODO: Account for unselected qualifications.
      */
     fun matchQualificationsWithSkills() : Int {
         var matches = 0
@@ -130,6 +132,6 @@ class MatchViewModel(
         }
 
         Logger.e(this.javaClass.simpleName) { "            matches ${matches}" }
-        return ((matches.toDouble()/setResumeSkills.size) * 100).toInt()
+        return ((matches.toDouble()/setJobQualifications.size) * 100).toInt()
     }
 }
