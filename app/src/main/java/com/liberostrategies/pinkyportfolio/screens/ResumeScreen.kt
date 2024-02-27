@@ -36,12 +36,10 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.domain.download.AndroidDownloader
-import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 @Composable
 fun ResumeScreen(
-    context: Context,
-    matchViewModel: MatchViewModel
+    context: Context
 ) {
     val db = Firebase.firestore
     val resumeDoc = db.collection("resume")
@@ -74,7 +72,7 @@ fun ResumeScreen(
 
             for (i in (companyCount - 1) downTo 0) {
                 item {
-                    Company(i, docCompanies, matchViewModel)
+                    Company(i, docCompanies)
                 }
             }
         }
@@ -151,8 +149,7 @@ fun Objective(resumeDoc: CollectionReference) {
 @Composable
 fun Company(
     idxCompany: Int,
-    docCompanies: DocumentReference,
-    matchViewModel: MatchViewModel
+    docCompanies: DocumentReference
 ) {
     val docCompany = docCompanies.collection("company${idxCompany}")
     val docCompanyInfo = docCompany.document("info${idxCompany}")
@@ -201,7 +198,7 @@ fun Company(
             }
 
             for (i in (jobCount-1) downTo 0) {
-                Job(i, docCompany, matchViewModel)
+                Job(i, docCompany)
             }
         }
     }
@@ -211,7 +208,6 @@ fun Company(
 fun Job(
     idxJob: Int,
     docCompany: CollectionReference,
-    matchViewModel: MatchViewModel
 ) {
     val docJob = docCompany.document("job${idxJob}")
     var title by remember { mutableStateOf("") }
@@ -228,7 +224,6 @@ fun Job(
                 enddate = document.data?.get("enddate").toString()
                 duties = document.data?.get("duties").toString()
                 tech = document.data?.get("tech").toString()
-                matchViewModel.addResumeSkills(tech)
                 notablesCount = if (document.data?.get("notablescount") == null) 0 else document.data?.get("notablescount").toString().toInt()
             }
         }
