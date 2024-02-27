@@ -98,8 +98,6 @@ fun MatchScreen(
                 .padding(top = 5.dp),
             onClick = {
                 skills = ""
-                //matchButtonText = matchViewModel.getTechSkills().toString()
-                //matchButtonText = matchViewModel.getJobQualifications().toString()
                 matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
 
                 Logger.d("MatchScreen") { matchButtonText }
@@ -110,26 +108,6 @@ fun MatchScreen(
         }
 
         JobQualificationsList(db, matchViewModel)
-
-        /*
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(15.dp),
-                    modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                        .background(Color.Yellow)
-                ) {
-                    val collectionResume = db.collection("resume")
-
-                    for (c in 0..9) {
-                        for (j in 0..2) {
-                            item {
-                                ResumeSkills(collectionResume = collectionResume, companyIndex = c, jobIndex = j, matchViewModel)
-                            }
-                        }
-                    }
-                }
-         */
     }
 }
 

@@ -44,59 +44,6 @@ class MatchViewModel(
        initialQualificationsSize = size
     }
 
-    private var setResumeSkills = mutableSetOf<String>()
-
-    private fun addResumeSkill(techSkill: String) {
-        setResumeSkills.add(techSkill)
-    }
-
-    private fun removeResumeSkill(techSkill: String) {
-        if (setResumeSkills.contains(techSkill)) {
-            setResumeSkills.remove(techSkill)
-        }
-    }
-    /**
-     * [techSkills] contains commas. This method tokenizes each skill.
-     */
-    fun addResumeSkills(techSkills: String) {
-        val skills = techSkills.split(",").toHashSet()
-        Logger.e("JobQualificationsViewModel") { "addResumeSkills. SKILLS = $skills" }
-        for (untrimmedSkill in skills) {
-            addResumeSkill(untrimmedSkill.trim().removeSuffix("."))
-        }
-    }
-
-    fun getTechSkills() : MutableSet<String> {
-        return setResumeSkills
-    }
-
-    private val skills = StringBuilder()
-
-    fun getSkills() : String {
-        return skills.removeSuffix(".").toString()
-    }
-
-    fun clearSkills() : String {
-        return skills.clear().toString()
-    }
-    fun readResumeSkills(companyIndex: Int, jobIndex: Int): String {
-
-        viewModelScope.launch {
-            when (val result = matchUseCases.readResumeSkillsUseCase(companyIndex, jobIndex)) {
-                is UseCaseResult.Warning -> {
-                    Logger.e("JobQualificationsViewModel") { "No tech skills for company$companyIndex, job$jobIndex." }
-                }
-                is UseCaseResult.Success -> {
-                    Logger.d(this.javaClass.simpleName) { ">>>>${result.data}" }
-                    skills.clear().append(result.data)
-                }
-                is UseCaseResult.Error -> {
-                    Logger.e(this.javaClass.simpleName) { "Error read job qualifications result for  company$companyIndex, job$jobIndex." }
-                }
-            }
-        }
-        return skills.toString()
-    }
     fun readJobQualifications(category: String): MutableList<JobQualificationDomainModel> {
         val listJobQualifications = mutableListOf<JobQualificationDomainModel>()
         viewModelScope.launch {
@@ -121,21 +68,9 @@ class MatchViewModel(
     /**
      * Return percentage match of job qualifications with resume skills.
      * TODO: Move this business logic to a use case.
-     * TODO: Account for unselected qualifications.
      */
     fun matchQualificationsWithSkills() : Int {
-        var matchedSkills = 0
-        var unmatchedSkills = 0
-        var matchedQualifications = 0
-        var unmatchedQualifications = 0
-        val setMatches = setJobQualifications.intersect(setResumeSkills)
-        val matches = setMatches.size
-
-        Logger.e(this.javaClass.simpleName) { "     setResumeSkills(${setResumeSkills.size}) = $setResumeSkills" }
         Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
-        //Logger.e(this.javaClass.simpleName) { "            matches ${matchedSkills}, unmatched($unmatchedSkills)" }
-        //return ((matchedSkills.toDouble()/setJobQualifications.size) * 100).toInt()
-        Logger.e(this.javaClass.simpleName) { "            matches $matches = $setMatches" }
         return (getJobQualifications().size.toDouble() / initialQualificationsSize * 100).toInt()
     }
 }
