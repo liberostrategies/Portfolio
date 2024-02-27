@@ -1,6 +1,5 @@
 package com.liberostrategies.pinkyportfolio.screens
 
-import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -12,10 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,7 +57,7 @@ private class JobQualifications {
         const val VERSIONCONTROL = "versioncontrol"
         const val WEBSERVER = "webserver"
 
-        //val MAP_JOB_QUALIFICATIONS = mutableMapOf<String, Pair<String, String>>()
+        // Map Firebase keys to Job Qualifications Categories for display.
         val MAP_JOB_QUALIFICATIONS = mutableMapOf(
             CERTIFICATIONS to "Certification",
             DATABASES to "Database",
@@ -84,7 +83,8 @@ fun MatchScreen(
 ) {
     val db = Firebase.firestore
     var skills by remember { mutableStateOf("") }
-    var matchButtonText by remember { mutableStateOf("Match Job Qualifications to Resume Skills") }
+    val matchInstructions = "Match Job Qualifications to Resume Skills"
+    var matchButtonText by remember { mutableStateOf(matchInstructions) }
 
     Column(
         modifier = Modifier
@@ -101,6 +101,7 @@ fun MatchScreen(
                 //matchButtonText = matchViewModel.getTechSkills().toString()
                 //matchButtonText = matchViewModel.getJobQualifications().toString()
                 matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
+
                 Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)
@@ -288,7 +289,8 @@ fun Category(
             } else {
                 Logger.d("MatchScreen") { "No such document" }
             }
-            Logger.d("MatchScreen") { "Qualifications 2 size=${listQualifications.size} [$listQualifications]" }
+            Logger.d("MatchScreen") { "Qualifications 2 total(${matchViewModel.getJobQualifications().size}) size=${listQualifications.size} [$listQualifications]" }
+            matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
         }
         .addOnFailureListener { exception ->
             Logger.d("MatchScreen") { "get failed with $exception" }
@@ -330,11 +332,11 @@ fun Category(
                     onCheckedChange = {
                         checkedState = it
                         if (!it) {
-                            Logger.d("MatchScreen") { "Removing $qualification" }
                             matchViewModel.removeJobQualification(qualification)
+                            Logger.d("MatchScreen") { "Removed $qualification. Total(${matchViewModel.getJobQualifications().size})" }
                         } else {
-                            Logger.d("MatchScreen") { "Adding $qualification" }
                             matchViewModel.addJobQualification(qualification)
+                            Logger.d("MatchScreen") { "Added $qualification. Total(${matchViewModel.getJobQualifications().size})" }
                         }
                     }
                 )
@@ -349,49 +351,4 @@ fun Category(
             }
         }
     }
-}
-
-fun countOccurrences(s: String, ch: Char): Int {
-    return s.count { it == ch }
-}
-
-@Composable
-fun ResumeSkills(
-    collectionResume: CollectionReference,
-    companyIndex: Int,
-    jobIndex: Int,
-    matchViewModel: MatchViewModel
-) {
-    Logger.d("MatchScreen:ResumeSkills") { "\n\nentering... $companyIndex, $jobIndex" }
-    val docCompanies = collectionResume.document("companies")
-    val collectionCompany = docCompanies.collection("company$companyIndex")
-    val docJob = collectionCompany.document("job$jobIndex")
-    var skills by remember { mutableStateOf("") }
-    docJob.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                Logger.d("MatchScreen:ResumeSkills") { "techSkills: ${document.data?.get("tech")}" }
-                if (document.data?.get("tech") != null) {
-                    val skill = document.data?.get("tech").toString()
-                    skills = skill
-                    //matchViewModel.addSkill(skill)
-                }
-                Logger.d("MatchScreen:ResumeSkills") { "Skills 1[$skills]" }
-            } else {
-                Logger.d("MatchScreen:ResumeSkills") { "No such document" }
-            }
-            Logger.d("MatchScreen:ResumeSkills") { "Skills 2[$skills]" }
-        }
-        .addOnFailureListener { exception ->
-            Logger.d("MatchScreen:ResumeSkills") { "get failed with $exception" }
-            throw JobQualificationsDoNotExistException(exception.toString())
-        }
-
-//Don't show.
-/*
-        Text(
-            text = "${skills.length} == ${countOccurrences(skills, ',')} == $skills",
-            //text = matchViewModel.getTechSkills().toString()
-        )
- */
 }
