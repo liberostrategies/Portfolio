@@ -39,6 +39,11 @@ class MatchViewModel(
         return setJobQualifications
     }
 
+    private var initialQualificationsSize = 0
+    fun setInitialQualificationsSize(size: Int) {
+       initialQualificationsSize = size
+    }
+
     private var setResumeSkills = mutableSetOf<String>()
 
     private fun addResumeSkill(techSkill: String) {
@@ -55,6 +60,7 @@ class MatchViewModel(
      */
     fun addResumeSkills(techSkills: String) {
         val skills = techSkills.split(",").toHashSet()
+        Logger.e("JobQualificationsViewModel") { "addResumeSkills. SKILLS = $skills" }
         for (untrimmedSkill in skills) {
             addResumeSkill(untrimmedSkill.trim().removeSuffix("."))
         }
@@ -118,20 +124,18 @@ class MatchViewModel(
      * TODO: Account for unselected qualifications.
      */
     fun matchQualificationsWithSkills() : Int {
-        var matches = 0
+        var matchedSkills = 0
+        var unmatchedSkills = 0
+        var matchedQualifications = 0
+        var unmatchedQualifications = 0
+        val setMatches = setJobQualifications.intersect(setResumeSkills)
+        val matches = setMatches.size
+
         Logger.e(this.javaClass.simpleName) { "     setResumeSkills(${setResumeSkills.size}) = $setResumeSkills" }
         Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
-        for (skill in setResumeSkills) {
-            Logger.e(this.javaClass.simpleName) { "skill = ${skill}" }
-            if (setJobQualifications.contains(skill)) {
-                matches++
-            } else {
-                Logger.e(this.javaClass.simpleName) { "No Match skill = ${skill}" }
-                //removeResumeSkill(skill)
-            }
-        }
-
-        Logger.e(this.javaClass.simpleName) { "            matches ${matches}" }
-        return ((matches.toDouble()/setJobQualifications.size) * 100).toInt()
+        //Logger.e(this.javaClass.simpleName) { "            matches ${matchedSkills}, unmatched($unmatchedSkills)" }
+        //return ((matchedSkills.toDouble()/setJobQualifications.size) * 100).toInt()
+        Logger.e(this.javaClass.simpleName) { "            matches $matches = $setMatches" }
+        return (getJobQualifications().size.toDouble() / initialQualificationsSize * 100).toInt()
     }
 }
