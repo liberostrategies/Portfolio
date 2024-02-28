@@ -25,23 +25,37 @@ class MatchViewModel(
     )
 ) : ViewModel() {
 
-    private val setJobQualifications = mutableSetOf<String>()
+    private val setJobQualifications = mutableSetOf<JobQualificationDomainModel>()
 
-    fun addJobQualification(jobQualification: String) {
-        setJobQualifications.add(jobQualification)
+    fun addJobQualification(category: String, jobQualification: String) {
+        setJobQualifications.add(JobQualificationDomainModel(category, jobQualification))
     }
 
-    fun removeJobQualification(jobQualification: String) {
-        setJobQualifications.remove(jobQualification)
+    fun selectJobQualification(category: String, jobQualification: String) {
+        val qual  = setJobQualifications.find {
+                q: JobQualificationDomainModel -> q.qualification == jobQualification
+        }
+        qual?.selectForMatch(true)
+        Logger.e(this.javaClass.simpleName) { "add $jobQualification, setJobQualifications $setJobQualifications." }
     }
 
-    fun getJobQualifications() : MutableSet<String> {
+    fun unselectJobQualification(jobQualification: String) {
+        val qual  = setJobQualifications.find {
+            q: JobQualificationDomainModel -> q.qualification == jobQualification
+        }
+        qual?.selectForMatch(false)
+
+        Logger.e(this.javaClass.simpleName) { "remove $jobQualification, setJobQualifications $setJobQualifications." }
+    }
+
+    fun getJobQualifications() : MutableSet<JobQualificationDomainModel> {
         return setJobQualifications
     }
 
     private var initialQualificationsSize = 0
     fun setInitialQualificationsSize(size: Int) {
        initialQualificationsSize = size
+        Logger.d(this.javaClass.simpleName) { "INITIAL size $size" }
     }
 
     fun readJobQualifications(category: String): MutableList<JobQualificationDomainModel> {
@@ -65,12 +79,19 @@ class MatchViewModel(
         return listJobQualifications
     }
 
+    public fun getSelectedJobQualificationsSize() : Int {
+        val listSelected = setJobQualifications.filter {
+            q: JobQualificationDomainModel -> q.isSelectedForMatch
+        }
+        return listSelected.size
+    }
+
     /**
      * Return percentage match of job qualifications with resume skills.
      * TODO: Move this business logic to a use case.
      */
     fun matchQualificationsWithSkills() : Int {
-        Logger.e(this.javaClass.simpleName) { "setJobQualifications(${setJobQualifications.size}) = $setJobQualifications" }
-        return (getJobQualifications().size.toDouble() / initialQualificationsSize * 100).toInt()
+        Logger.e(this.javaClass.simpleName) { "initialQualificationsSize($initialQualificationsSize), getSelectedJobQualificationsSize(${getSelectedJobQualificationsSize()}) = $setJobQualifications" }
+        return (getSelectedJobQualificationsSize().toDouble() / initialQualificationsSize * 100).toInt()
     }
 }

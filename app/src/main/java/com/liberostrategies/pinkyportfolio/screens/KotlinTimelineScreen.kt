@@ -5,16 +5,64 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
+import com.google.firebase.firestore.CollectionReference
 import com.liberostrategies.pinkyportfolio.Job
 import com.liberostrategies.pinkyportfolio.WristAwayApp
 import com.liberostrategies.pinkyportfolio.Year
-
+import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
+import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
+import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
 @Composable
-fun KotlinTimelineScreen() {
+fun KotlinTimelineScreen(
+    matchViewModel: MatchViewModel,
+    collectionJobQuals: CollectionReference,
+) {
+    var size by remember { mutableIntStateOf(0) }
+
+    val mapJobQualifications = JobQualifications.MAP_JOB_QUALIFICATIONS
+    mapJobQualifications.forEach { (categoryKey, u) ->
+
+    val docCertifications = collectionJobQuals.document(categoryKey)
+    val listQualifications = mutableListOf<JobQualificationDomainModel>()
+
+    // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
+    // Kept losing items in listQualifications after get().
+    docCertifications.get()
+        .addOnSuccessListener { document ->
+            if (document != null) {
+                Logger.d("KotlineTimelineScreen") { "$categoryKey qualifications: ${document.data}" }
+                var i = 0
+                while (document.data?.get("$i") != null) {
+                    val q = document.data?.get("$i").toString()
+                    listQualifications.add(JobQualificationDomainModel(categoryKey, q))
+                    matchViewModel.addJobQualification(categoryKey, q)
+                    i++
+                    size = i
+                }
+                Logger.d("KotlineTimelineScreen") { "Qualifications 1[$listQualifications]" }
+                Logger.d("KotlineTimelineScreen") { "size $size ${listQualifications.size}" }
+            } else {
+                Logger.d("KotlineTimelineScreen") { "No such document" }
+            }
+            Logger.d("KotlineTimelineScreen") { "Qualifications 2 total(${matchViewModel.getJobQualifications().size}) size=${listQualifications.size} [$listQualifications]" }
+            matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
+        }
+        .addOnFailureListener { exception ->
+            Logger.d("KotlineTimelineScreen") { "get failed with $exception" }
+            throw JobQualificationsDoNotExistException(exception.toString())
+        }
+
+    } // end mapJobQualifications.forEach
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
     ) {

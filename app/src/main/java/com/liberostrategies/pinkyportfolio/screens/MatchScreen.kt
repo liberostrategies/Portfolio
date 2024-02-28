@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,15 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
-import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
 import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
-private class JobQualifications {
+open class JobQualifications {
     companion object {
         // Match Firebase keys
         const val CERTIFICATIONS = "certifications"
@@ -79,9 +73,9 @@ private class JobQualifications {
 
 @Composable
 fun MatchScreen(
-    matchViewModel: MatchViewModel
+    matchViewModel: MatchViewModel,
+    collectionJobQuals: CollectionReference
 ) {
-    val db = Firebase.firestore
     var skills by remember { mutableStateOf("") }
     val matchInstructions = "Match Job Qualifications to Resume Skills"
     var matchButtonText by remember { mutableStateOf(matchInstructions) }
@@ -107,16 +101,15 @@ fun MatchScreen(
             Text(matchButtonText)
         }
 
-        JobQualificationsList(db, matchViewModel)
+        JobQualificationsList(matchViewModel, collectionJobQuals)
     }
 }
 
 @Composable
 fun ColumnScope.JobQualificationsList(
-    db: FirebaseFirestore,
-    matchViewModel: MatchViewModel
+    matchViewModel: MatchViewModel,
+    collectionJobQuals: CollectionReference
 ) {
-    val collectionJobQuals = db.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -245,36 +238,8 @@ fun Category(
     categoryKey: String,
     categoryDisplay: String,
 ) {
-    val docCertifications = collectionJobQuals.document(categoryKey)
-    val listQualifications = mutableListOf<JobQualificationDomainModel>()
-    var size by remember { mutableIntStateOf(0) }
-
-    // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
-    // Kept losing items in listQualifications after get().
-    docCertifications.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                Logger.d("MatchScreen") { "$categoryKey qualifications: ${document.data}" }
-                var i = 0
-                while (document.data?.get("$i") != null) {
-                    val q = document.data?.get("$i").toString()
-                    listQualifications.add(JobQualificationDomainModel(categoryKey, q))
-                    matchViewModel.addJobQualification(q)
-                    i++
-                    size = i
-                }
-                Logger.d("MatchScreen") { "Qualifications 1[$listQualifications]" }
-            } else {
-                Logger.d("MatchScreen") { "No such document" }
-            }
-            Logger.d("MatchScreen") { "Qualifications 2 total(${matchViewModel.getJobQualifications().size}) size=${listQualifications.size} [$listQualifications]" }
-            matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
-        }
-        .addOnFailureListener { exception ->
-            Logger.d("MatchScreen") { "get failed with $exception" }
-            throw JobQualificationsDoNotExistException(exception.toString())
-        }
-
+    val listQualifications = matchViewModel.getJobQualifications()
+    val size = matchViewModel.getSelectedJobQualificationsSize()
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -282,7 +247,7 @@ fun Category(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Logger.d("MatchScreen") { "size $size ${listQualifications.size}" }
+        Logger.d("MatchScreen") { "selectedSize $size ${listQualifications.size}" }
         Text(
             text = categoryDisplay,
             modifier = Modifier
@@ -304,17 +269,18 @@ fun Category(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val category = it.category
                 val qualification = it.qualification
                 Checkbox(
                     checked = checkedState,
                     onCheckedChange = {
                         checkedState = it
                         if (!it) {
-                            matchViewModel.removeJobQualification(qualification)
-                            Logger.d("MatchScreen") { "Removed $qualification. Total(${matchViewModel.getJobQualifications().size})" }
+                            matchViewModel.unselectJobQualification(qualification)
+                            Logger.d("MatchScreen") { "Unselect $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
                         } else {
-                            matchViewModel.addJobQualification(qualification)
-                            Logger.d("MatchScreen") { "Added $qualification. Total(${matchViewModel.getJobQualifications().size})" }
+                            matchViewModel.selectJobQualification(category, qualification)
+                            Logger.d("MatchScreen") { "Select $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
                         }
                     }
                 )
