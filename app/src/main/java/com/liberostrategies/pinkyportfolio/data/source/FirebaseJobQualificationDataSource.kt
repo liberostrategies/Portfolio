@@ -66,10 +66,6 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         return list
     }
 
-    override suspend fun readAllQualificationsAsJson(): String {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun updateQualification(
         category: String,
         qualification: String,
