@@ -21,11 +21,6 @@ interface IJobQualificationDataSource {
 
     suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
 
-    /**
-     * Returns JSON format mainly used for debug.
-     */
-    suspend fun readAllQualificationsAsJson(): String
-
     suspend fun updateQualification(
         category: String, 
         qualification: String,

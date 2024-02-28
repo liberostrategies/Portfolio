@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,16 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.liberostrategies.pinkyportfolio.data.source.JobQualificationsDoNotExistException
-import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
 import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
-private class JobQualifications {
+open class JobQualifications {
     companion object {
         // Match Firebase keys
         const val CERTIFICATIONS = "certifications"
@@ -79,9 +72,8 @@ private class JobQualifications {
 
 @Composable
 fun MatchScreen(
-    matchViewModel: MatchViewModel
+    matchViewModel: MatchViewModel,
 ) {
-    val db = Firebase.firestore
     var skills by remember { mutableStateOf("") }
     val matchInstructions = "Match Job Qualifications to Resume Skills"
     var matchButtonText by remember { mutableStateOf(matchInstructions) }
@@ -95,28 +87,24 @@ fun MatchScreen(
         Button( // TODO: Make this a common button, because it is reused.
             modifier = Modifier
                 .height(50.dp)
-                .padding(top = 5.dp),
+                .padding(bottom = 5.dp),
             onClick = {
                 skills = ""
                 matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
-
-                Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)
         ) {
             Text(matchButtonText)
         }
 
-        JobQualificationsList(db, matchViewModel)
+        JobQualificationsList(matchViewModel)
     }
 }
 
 @Composable
 fun ColumnScope.JobQualificationsList(
-    db: FirebaseFirestore,
-    matchViewModel: MatchViewModel
+    matchViewModel: MatchViewModel,
 ) {
-    val collectionJobQuals = db.collection("jobqualifications")
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -125,113 +113,85 @@ fun ColumnScope.JobQualificationsList(
     ) {
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.LANGUAGES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.LANGUAGES)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.IDES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.IDES)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.DATABASES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DATABASES)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.TESTINGTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.TESTINGTOOLS)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.VERSIONCONTROL,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.VERSIONCONTROL)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.WEBSERVER,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.WEBSERVER)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.FORMATTING,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.FORMATTING)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.GRAPHICS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.GRAPHICS)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.PROCESSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROCESSES)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.PROJECTTOOLS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.PROJECTTOOLS)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.DOCUMENTATION,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.DOCUMENTATION)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.OSES,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.OSES)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.REQUIREMENTS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.REQUIREMENTS)
             )
         }
         item {
             Category(
-                collectionJobQuals = collectionJobQuals,
                 matchViewModel = matchViewModel,
-                categoryKey = JobQualifications.CERTIFICATIONS,
                 categoryDisplay = MAP_JOB_QUALIFICATIONS.getValue(JobQualifications.CERTIFICATIONS)
             )
         }
@@ -240,40 +200,10 @@ fun ColumnScope.JobQualificationsList(
 
 @Composable
 fun Category(
-    collectionJobQuals: CollectionReference,
     matchViewModel: MatchViewModel,
-    categoryKey: String,
     categoryDisplay: String,
 ) {
-    val docCertifications = collectionJobQuals.document(categoryKey)
-    val listQualifications = mutableListOf<JobQualificationDomainModel>()
-    var size by remember { mutableIntStateOf(0) }
-
-    // NOTE: Could not figure out how to put this Firebase DB read into FirebaseDataSource.kt.
-    // Kept losing items in listQualifications after get().
-    docCertifications.get()
-        .addOnSuccessListener { document ->
-            if (document != null) {
-                Logger.d("MatchScreen") { "$categoryKey qualifications: ${document.data}" }
-                var i = 0
-                while (document.data?.get("$i") != null) {
-                    val q = document.data?.get("$i").toString()
-                    listQualifications.add(JobQualificationDomainModel(categoryKey, q))
-                    matchViewModel.addJobQualification(q)
-                    i++
-                    size = i
-                }
-                Logger.d("MatchScreen") { "Qualifications 1[$listQualifications]" }
-            } else {
-                Logger.d("MatchScreen") { "No such document" }
-            }
-            Logger.d("MatchScreen") { "Qualifications 2 total(${matchViewModel.getJobQualifications().size}) size=${listQualifications.size} [$listQualifications]" }
-            matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
-        }
-        .addOnFailureListener { exception ->
-            Logger.d("MatchScreen") { "get failed with $exception" }
-            throw JobQualificationsDoNotExistException(exception.toString())
-        }
+    val listQualifications = matchViewModel.getJobQualifications()
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -282,7 +212,6 @@ fun Category(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Logger.d("MatchScreen") { "size $size ${listQualifications.size}" }
         Text(
             text = categoryDisplay,
             modifier = Modifier
@@ -291,41 +220,45 @@ fun Category(
             fontWeight = FontWeight.Bold
         )
         listQualifications.forEach {
-            var checkedState by remember { mutableStateOf(true) }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .toggleable(
-                        value = checkedState,
-                        onValueChange = { checkedState = !checkedState },
-                        role = Role.Checkbox
-                    )
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val qualification = it.qualification
-                Checkbox(
-                    checked = checkedState,
-                    onCheckedChange = {
-                        checkedState = it
-                        if (!it) {
-                            matchViewModel.removeJobQualification(qualification)
-                            Logger.d("MatchScreen") { "Removed $qualification. Total(${matchViewModel.getJobQualifications().size})" }
-                        } else {
-                            matchViewModel.addJobQualification(qualification)
-                            Logger.d("MatchScreen") { "Added $qualification. Total(${matchViewModel.getJobQualifications().size})" }
-                        }
-                    }
-                )
 
-                Text(
-                    text = qualification,
-                    modifier = Modifier
-                        .padding(start = 10.dp),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+            if (MAP_JOB_QUALIFICATIONS.getValue(it.category) == categoryDisplay) {
+                var checkedState by remember { mutableStateOf(true) }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .toggleable(
+                            value = checkedState,
+                            onValueChange = { checkedState = !checkedState },
+                            role = Role.Checkbox
+                        )
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    it.category
+                    val qualification = it.qualification
+                    Checkbox(
+                        checked = checkedState,
+                        onCheckedChange = {
+                            checkedState = it
+                            if (!it) {
+                                matchViewModel.unselectJobQualification(qualification)
+                                Logger.d("MatchScreen") { "Unselect $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
+                            } else {
+                                matchViewModel.selectJobQualification(qualification)
+                                Logger.d("MatchScreen") { "Select $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
+                            }
+                        }
+                    )
+
+                    Text(
+                        text = qualification,
+                        modifier = Modifier
+                            .padding(start = 10.dp),
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             }
         }
     }

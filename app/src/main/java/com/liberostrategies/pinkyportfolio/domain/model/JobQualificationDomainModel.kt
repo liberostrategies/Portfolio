@@ -3,9 +3,9 @@ package com.liberostrategies.pinkyportfolio.domain.model
 data class JobQualificationDomainModel(
     val category: String,
     val qualification: String,
-    var doMatch: Boolean = false,
+    var isSelectedForMatch: Boolean = true,
 ) {
-    fun changeMatch(match: Boolean) {
-        doMatch = match
+    fun selectForMatch(selectForMatch: Boolean) {
+        isSelectedForMatch = selectForMatch
     }
 }
