@@ -140,7 +140,7 @@ fun PortfolioNavHost(
             )
         }
         composable(PortfolioScreen.route_match) {
-            MatchScreen(matchViewModel, collectionJobQuals)
+            MatchScreen(matchViewModel)
         }
     }
 }
@@ -235,7 +235,6 @@ fun Job(
             .padding(1.dp)
             .clickable(true,
                 onClick = {
-                    Logger.i("Clicked $title")
                     openJobDetailsDialog = true
                 }
             )
@@ -359,7 +358,6 @@ fun WristAwayApp(
                 .padding(1.dp)
                 .clickable(true,
                     onClick = {
-                        Logger.i("Clicked $version")
                         openAppDetailsDialog = true
                     }
                 )

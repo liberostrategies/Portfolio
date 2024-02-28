@@ -29,7 +29,7 @@ fun KotlinTimelineScreen(
     var size by remember { mutableIntStateOf(0) }
 
     val mapJobQualifications = JobQualifications.MAP_JOB_QUALIFICATIONS
-    mapJobQualifications.forEach { (categoryKey, u) ->
+    mapJobQualifications.forEach { (categoryKey, _) ->
 
     val docCertifications = collectionJobQuals.document(categoryKey)
     val listQualifications = mutableListOf<JobQualificationDomainModel>()
@@ -39,7 +39,6 @@ fun KotlinTimelineScreen(
     docCertifications.get()
         .addOnSuccessListener { document ->
             if (document != null) {
-                Logger.d("KotlineTimelineScreen") { "$categoryKey qualifications: ${document.data}" }
                 var i = 0
                 while (document.data?.get("$i") != null) {
                     val q = document.data?.get("$i").toString()
@@ -48,16 +47,13 @@ fun KotlinTimelineScreen(
                     i++
                     size = i
                 }
-                Logger.d("KotlineTimelineScreen") { "Qualifications 1[$listQualifications]" }
-                Logger.d("KotlineTimelineScreen") { "size $size ${listQualifications.size}" }
             } else {
-                Logger.d("KotlineTimelineScreen") { "No such document" }
+                Logger.e("KotlineTimelineScreen") { "No such document" }
             }
-            Logger.d("KotlineTimelineScreen") { "Qualifications 2 total(${matchViewModel.getJobQualifications().size}) size=${listQualifications.size} [$listQualifications]" }
             matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
         }
         .addOnFailureListener { exception ->
-            Logger.d("KotlineTimelineScreen") { "get failed with $exception" }
+            Logger.e("KotlineTimelineScreen") { "Get failed with $exception" }
             throw JobQualificationsDoNotExistException(exception.toString())
         }
 

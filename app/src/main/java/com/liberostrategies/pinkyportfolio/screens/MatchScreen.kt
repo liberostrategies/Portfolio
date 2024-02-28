@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.google.firebase.firestore.CollectionReference
 import com.liberostrategies.pinkyportfolio.screens.JobQualifications.Companion.MAP_JOB_QUALIFICATIONS
 import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
@@ -74,7 +73,6 @@ open class JobQualifications {
 @Composable
 fun MatchScreen(
     matchViewModel: MatchViewModel,
-    collectionJobQuals: CollectionReference
 ) {
     var skills by remember { mutableStateOf("") }
     val matchInstructions = "Match Job Qualifications to Resume Skills"
@@ -89,26 +87,23 @@ fun MatchScreen(
         Button( // TODO: Make this a common button, because it is reused.
             modifier = Modifier
                 .height(50.dp)
-                .padding(top = 5.dp),
+                .padding(bottom = 5.dp),
             onClick = {
                 skills = ""
                 matchButtonText = matchViewModel.matchQualificationsWithSkills().toString() + "% Match"
-
-                Logger.d("MatchScreen") { matchButtonText }
             },
             shape = RoundedCornerShape(5.dp)
         ) {
             Text(matchButtonText)
         }
 
-        JobQualificationsList(matchViewModel, collectionJobQuals)
+        JobQualificationsList(matchViewModel)
     }
 }
 
 @Composable
 fun ColumnScope.JobQualificationsList(
     matchViewModel: MatchViewModel,
-    collectionJobQuals: CollectionReference
 ) {
 
     LazyColumn(
@@ -209,7 +204,7 @@ fun Category(
     categoryDisplay: String,
 ) {
     val listQualifications = matchViewModel.getJobQualifications()
-    val size = matchViewModel.getSelectedJobQualificationsSize()
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -217,7 +212,6 @@ fun Category(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Logger.d("MatchScreen") { "selectedSize $size ${listQualifications.size}" }
         Text(
             text = categoryDisplay,
             modifier = Modifier
@@ -225,7 +219,6 @@ fun Category(
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
-        Logger.d("MatchScreen") { "QUALIFICATIONS $size ${listQualifications.size} $listQualifications" }
         listQualifications.forEach {
 
             if (MAP_JOB_QUALIFICATIONS.getValue(it.category) == categoryDisplay) {
@@ -242,7 +235,7 @@ fun Category(
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val category = it.category
+                    it.category
                     val qualification = it.qualification
                     Checkbox(
                         checked = checkedState,
@@ -252,7 +245,7 @@ fun Category(
                                 matchViewModel.unselectJobQualification(qualification)
                                 Logger.d("MatchScreen") { "Unselect $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
                             } else {
-                                matchViewModel.selectJobQualification(category, qualification)
+                                matchViewModel.selectJobQualification(qualification)
                                 Logger.d("MatchScreen") { "Select $qualification. Total(${matchViewModel.getSelectedJobQualificationsSize()})" }
                             }
                         }

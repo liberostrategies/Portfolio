@@ -31,12 +31,11 @@ class MatchViewModel(
         setJobQualifications.add(JobQualificationDomainModel(category, jobQualification))
     }
 
-    fun selectJobQualification(category: String, jobQualification: String) {
+    fun selectJobQualification(jobQualification: String) {
         val qual  = setJobQualifications.find {
                 q: JobQualificationDomainModel -> q.qualification == jobQualification
         }
         qual?.selectForMatch(true)
-        Logger.e(this.javaClass.simpleName) { "add $jobQualification, setJobQualifications $setJobQualifications." }
     }
 
     fun unselectJobQualification(jobQualification: String) {
@@ -44,8 +43,6 @@ class MatchViewModel(
             q: JobQualificationDomainModel -> q.qualification == jobQualification
         }
         qual?.selectForMatch(false)
-
-        Logger.e(this.javaClass.simpleName) { "remove $jobQualification, setJobQualifications $setJobQualifications." }
     }
 
     fun getJobQualifications() : MutableSet<JobQualificationDomainModel> {
@@ -55,7 +52,6 @@ class MatchViewModel(
     private var initialQualificationsSize = 0
     fun setInitialQualificationsSize(size: Int) {
        initialQualificationsSize = size
-        Logger.d(this.javaClass.simpleName) { "INITIAL size $size" }
     }
 
     fun readJobQualifications(category: String): MutableList<JobQualificationDomainModel> {
@@ -79,7 +75,7 @@ class MatchViewModel(
         return listJobQualifications
     }
 
-    public fun getSelectedJobQualificationsSize() : Int {
+    fun getSelectedJobQualificationsSize() : Int {
         val listSelected = setJobQualifications.filter {
             q: JobQualificationDomainModel -> q.isSelectedForMatch
         }
