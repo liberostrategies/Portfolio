@@ -96,7 +96,6 @@ class MainActivity : ComponentActivity() {
                         bottomBar = { PortfolioBottomBar(navController) }
 
                     ) {
-                        //KotlinTimeline() {}
                         PortfolioNavHost(
                             navController = navController,
                             modifier = Modifier.padding(it),

@@ -11,7 +11,7 @@ class AndroidDownloader(
 ): Downloader {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
 
-    private fun fileName(url: String): String { // TODO: Also in MainActivity.kt. Move to single place.
+    private fun fileName(url: String): String {
         return url.substringAfterLast('/')
     }
     override fun downloadFile(url: String): Long {
