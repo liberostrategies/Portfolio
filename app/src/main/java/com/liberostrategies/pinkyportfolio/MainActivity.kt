@@ -50,6 +50,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.touchlab.kermit.Logger
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.repo.JobQualificationsRepo
 import com.liberostrategies.pinkyportfolio.data.repo.ResumeSkillsRepo
 import com.liberostrategies.pinkyportfolio.data.source.FirebaseJobQualificationDataSource
@@ -71,6 +74,9 @@ class MainActivity : ComponentActivity() {
             val repoJobQual = JobQualificationsRepo(FirebaseJobQualificationDataSource())
             val repoSkillsRepo = ResumeSkillsRepo(FirebaseResumeSkillDataSource())
             val matchViewModel = MatchViewModel(repoJobQual, repoSkillsRepo)
+
+            val db = Firebase.firestore
+            val collectionJobQuals = db.collection("jobqualifications")
 
             PinkyPortfolioTheme {
                 Surface(
@@ -96,12 +102,12 @@ class MainActivity : ComponentActivity() {
                         bottomBar = { PortfolioBottomBar(navController) }
 
                     ) {
-                        //KotlinTimeline() {}
                         PortfolioNavHost(
                             navController = navController,
                             modifier = Modifier.padding(it),
                             context = this,
-                            matchViewModel = matchViewModel
+                            matchViewModel = matchViewModel,
+                            collectionJobQuals = collectionJobQuals
                         )
                     }
                 }
@@ -115,7 +121,8 @@ fun PortfolioNavHost(
     navController: NavHostController,
     modifier: Modifier,
     context: Context,
-    matchViewModel: MatchViewModel
+    matchViewModel: MatchViewModel,
+    collectionJobQuals: CollectionReference
 ) {
     NavHost(
         navController = navController,
@@ -123,8 +130,7 @@ fun PortfolioNavHost(
         modifier = modifier
     ) {
         composable(PortfolioScreen.route_home) {
-            KotlinTimelineScreen(
-            )
+            KotlinTimelineScreen(matchViewModel, collectionJobQuals)
         }
         composable(
             route = PortfolioScreen.route_resume,
@@ -229,7 +235,6 @@ fun Job(
             .padding(1.dp)
             .clickable(true,
                 onClick = {
-                    Logger.i("Clicked $title")
                     openJobDetailsDialog = true
                 }
             )
@@ -353,7 +358,6 @@ fun WristAwayApp(
                 .padding(1.dp)
                 .clickable(true,
                     onClick = {
-                        Logger.i("Clicked $version")
                         openAppDetailsDialog = true
                     }
                 )
