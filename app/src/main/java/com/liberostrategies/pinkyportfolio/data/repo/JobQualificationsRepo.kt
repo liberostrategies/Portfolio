@@ -19,10 +19,6 @@ class JobQualificationsRepo(private val dataSource: IJobQualificationDataSource)
         return dataSource.readAllQualifications()
     }
 
-    override suspend fun readAllQualificationsAsJson(): String {
-        return dataSource.readAllQualificationsAsJson()
-    }
-
     override suspend fun updateQualification(
         category: String,
         qualification: String,
