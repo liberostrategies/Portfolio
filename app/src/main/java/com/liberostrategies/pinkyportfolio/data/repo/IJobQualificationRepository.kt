@@ -8,6 +8,10 @@ interface IJobQualificationRepository {
         qualification: String
     ) : JobQualificationDataModel
 
+    suspend fun readQualification(
+        category: String,
+        jobQualification: String
+    )
     suspend fun readQualifications(
         category: String
     ): MutableList<JobQualificationDataModel>
