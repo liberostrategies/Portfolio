@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.liberostrategies.pinkyportfolio.data.model.JobQualificationDataModel
 import co.touchlab.kermit.Logger
+import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
 
 class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
     /****************************************************************************************
@@ -17,7 +18,12 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         mCollectionJobQualifications = db.collection("jobqualifications")
     }
 
+    var mListQualifications = mutableListOf<JobQualificationDataModel>()
+    var initialQualificationsSize = 0
 
+    /**
+     * Hope to write to Firebase DB.
+     */
     override suspend fun createQualification(
         category: String,
         qualification: String
@@ -25,12 +31,30 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         TODO("Not yet implemented")
     }
 
-    var mListQualifications = mutableListOf<JobQualificationDataModel>()
-
     override suspend fun getListQualifications(): MutableList<JobQualificationDataModel> {
         return mListQualifications
     }
 
+    /**
+     * Read [category] and [jobQualification] from ViewModel, which gets data from Firebase DB.
+     */
+    override suspend fun readQualification(category: String, jobQualification: String) {
+        mListQualifications.add(JobQualificationDataModel(category, jobQualification))
+    }
+
+    /**
+     * Read [category] and [jobQualification] from ViewModel, which gets data from Firebase DB.
+     */    override fun readQualificationsSizeUseCase(size: Int) {
+        initialQualificationsSize = size
+    }
+
+    override fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int {
+        return (selectedJobQualificationsSize.toDouble() / initialQualificationsSize * 100).toInt()
+    }
+
+    /**
+     * NOTE: Couldn't get this to work to read directly from Firebase DB. Moved to Compose UI layer.
+     */
     override suspend fun readQualifications(category: String): MutableList<JobQualificationDataModel> {
         Logger.d(this.javaClass.simpleName) { "Category[$category] readQualifications for category [$category]" }
         val docCategory = mCollectionJobQualifications.document(category)
@@ -60,12 +84,18 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         return listQualifications
     }
 
+    /**
+     * Hope to read directly from Firebase DB.
+     */
     override suspend fun readAllQualifications(): MutableList<JobQualificationDataModel> {
         val list = mutableListOf<JobQualificationDataModel>()
 //        list.add(readQualifications("certifications"))
         return list
     }
 
+    /**
+     * Hope to write to Firebase DB.
+     */
     override suspend fun updateQualification(
         category: String,
         qualification: String,
@@ -74,6 +104,9 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         TODO("Not yet implemented")
     }
 
+    /**
+     * Hope to delete from Firebase DB.
+     */
     override suspend fun deleteQualification(category: String, qualification: String) {
         TODO("Not yet implemented")
     }
