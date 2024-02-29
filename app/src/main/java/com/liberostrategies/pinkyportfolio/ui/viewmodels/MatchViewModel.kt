@@ -10,8 +10,10 @@ import com.liberostrategies.pinkyportfolio.data.repo.ResumeSkillsRepo
 import com.liberostrategies.pinkyportfolio.data.source.FirebaseJobQualificationDataSource
 import com.liberostrategies.pinkyportfolio.data.source.FirebaseResumeSkillDataSource
 import com.liberostrategies.pinkyportfolio.domain.model.JobQualificationDomainModel
+import com.liberostrategies.pinkyportfolio.domain.usecases.MatchQualificationsWithSkillsUseCase
 import com.liberostrategies.pinkyportfolio.domain.usecases.MatchUseCases
 import com.liberostrategies.pinkyportfolio.domain.usecases.ReadJobQualificationUseCase
+import com.liberostrategies.pinkyportfolio.domain.usecases.ReadJobQualificationsSizeUseCase
 import com.liberostrategies.pinkyportfolio.domain.usecases.ReadResumeSkillsUseCase
 import com.liberostrategies.pinkyportfolio.domain.usecases.UseCaseResult
 import kotlinx.coroutines.launch
@@ -21,7 +23,9 @@ class MatchViewModel(
     private val repoResumeSkills: IResumeSkillsRepository = ResumeSkillsRepo(FirebaseResumeSkillDataSource()),
     private val matchUseCases: MatchUseCases = MatchUseCases(
         ReadJobQualificationUseCase(repoJobQualifications),
-        ReadResumeSkillsUseCase(repoResumeSkills)
+        ReadJobQualificationsSizeUseCase(repoJobQualifications),
+        MatchQualificationsWithSkillsUseCase(repoJobQualifications),
+        ReadResumeSkillsUseCase(repoResumeSkills),
     )
 ) : ViewModel() {
 
@@ -58,9 +62,15 @@ class MatchViewModel(
         return setOfJobQualifications
     }
 
-    private var initialQualificationsSize = 0
     fun setInitialQualificationsSize(size: Int) {
-       initialQualificationsSize = size
+        when (matchUseCases.readJobQualificationsSize(size)) {
+            is UseCaseResult.Success -> {
+                Logger.e(this.javaClass.simpleName) { "Initial size = $size" }
+            }
+            else -> {
+                Logger.e(this.javaClass.simpleName) { "Unhandled UseCase Result for reading the initial size." }
+            }
+        }
     }
 
     /*
@@ -97,10 +107,18 @@ class MatchViewModel(
 
     /**
      * Return percentage match of job qualifications with resume skills.
-     * TODO: Move this business logic to a use case.
      */
     fun matchQualificationsWithSkills() : Int {
-        Logger.e(this.javaClass.simpleName) { "initialQualificationsSize($initialQualificationsSize), getSelectedJobQualificationsSize(${getSelectedJobQualificationsSize()}) = $setOfJobQualifications" }
-        return (getSelectedJobQualificationsSize().toDouble() / initialQualificationsSize * 100).toInt()
+        return when (val result = matchUseCases.matchQualificationsWithSkillsUseCase(getSelectedJobQualificationsSize())) {
+            is UseCaseResult.Success -> {
+                Logger.e(this.javaClass.simpleName) { "Match ${result.data}" }
+                result.data?:0
+            }
+
+            else -> {
+                Logger.e(this.javaClass.simpleName) { "Unhandled UseCase Result for reading the initial size." }
+                0
+            }
+        }
     }
 }

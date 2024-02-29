@@ -18,6 +18,8 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         mCollectionJobQualifications = db.collection("jobqualifications")
     }
 
+    var mListQualifications = mutableListOf<JobQualificationDataModel>()
+    var initialQualificationsSize = 0
 
     /**
      * Hope to write to Firebase DB.
@@ -29,8 +31,6 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         TODO("Not yet implemented")
     }
 
-    var mListQualifications = mutableListOf<JobQualificationDataModel>()
-
     override suspend fun getListQualifications(): MutableList<JobQualificationDataModel> {
         return mListQualifications
     }
@@ -40,6 +40,16 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
      */
     override suspend fun readQualification(category: String, jobQualification: String) {
         mListQualifications.add(JobQualificationDataModel(category, jobQualification))
+    }
+
+    /**
+     * Read [category] and [jobQualification] from ViewModel, which gets data from Firebase DB.
+     */    override fun readQualificationsSizeUseCase(size: Int) {
+        initialQualificationsSize = size
+    }
+
+    override fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int {
+        return (selectedJobQualificationsSize.toDouble() / initialQualificationsSize * 100).toInt()
     }
 
     /**
@@ -94,6 +104,9 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         TODO("Not yet implemented")
     }
 
+    /**
+     * Hope to delete from Firebase DB.
+     */
     override suspend fun deleteQualification(category: String, qualification: String) {
         TODO("Not yet implemented")
     }

@@ -22,9 +22,13 @@ interface IJobQualificationDataSource {
         category: String
     ): MutableList<JobQualificationDataModel>
 
+    fun readQualificationsSizeUseCase(size: Int)
+
     suspend fun readAllQualifications(): MutableList<JobQualificationDataModel>
 
     suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
+
+    fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int
 
     suspend fun updateQualification(
         category: String, 

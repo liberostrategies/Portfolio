@@ -19,6 +19,14 @@ class JobQualificationsRepo(private val dataSource: IJobQualificationDataSource)
         return dataSource.readQualifications(category)
     }
 
+    override fun readQualificationsSize(size: Int) {
+        return dataSource.readQualificationsSizeUseCase(size)
+    }
+
+    override fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int {
+        return dataSource.matchQualificationsWithSkills(selectedJobQualificationsSize)
+    }
+
     override suspend fun readAllQualifications(): MutableList<JobQualificationDataModel> {
         return dataSource.readAllQualifications()
     }
