@@ -62,10 +62,10 @@ class MatchViewModel(
         return setOfJobQualifications
     }
 
-    fun setInitialQualificationsSize(size: Int) {
-        when (matchUseCases.readJobQualificationsSize(size)) {
+    fun setInitialQualificationsSize(initialQualificationSize: Int) {
+        when (matchUseCases.readJobQualificationsSize(initialQualificationSize)) {
             is UseCaseResult.Success -> {
-                Logger.e(this.javaClass.simpleName) { "Initial size = $size" }
+                Logger.e(this.javaClass.simpleName) { "Initial size = $initialQualificationSize" }
             }
             else -> {
                 Logger.e(this.javaClass.simpleName) { "Unhandled UseCase Result for reading the initial size." }

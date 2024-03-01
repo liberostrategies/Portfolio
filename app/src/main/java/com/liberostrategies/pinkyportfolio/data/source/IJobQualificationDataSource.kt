@@ -8,46 +8,17 @@ import com.liberostrategies.pinkyportfolio.data.model.JobQualificationDataModel
  * Job qualifications can by typed as input by the user.
  */
 interface IJobQualificationDataSource {
-    suspend fun createQualification(
-        category: String, 
-        qualification: String
-    ) : JobQualificationDataModel
 
     suspend fun readQualification(
         category: String,
         jobQualification: String
     )
 
-    suspend fun readQualifications(
-        category: String
-    ): MutableList<JobQualificationDataModel>
-
-    fun readQualificationsSizeUseCase(size: Int)
-
-    suspend fun readAllQualifications(): MutableList<JobQualificationDataModel>
+    fun readInitialQualificationsSize(size: Int)
 
     suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
 
     fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int
-
-    suspend fun updateQualification(
-        category: String, 
-        qualification: String,
-        newQualificationValue: String
-    )
-
-    suspend fun deleteQualification(
-        category: String, 
-        qualification: String
-    )
-}
-
-class JobQualificationAlreadyExistsException(
-    private val category: String,
-    private val qualification: String /** Manually entered qualification. */
-) : Exception() {
-    override val message: String
-        get() = "Job Qualification [$qualification] for Category [$category] already exists!"
 }
 
 class JobQualificationsDoNotExistException(
