@@ -31,7 +31,7 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
     }
 
     /**
-     * Read [category] and [jobQualification] from ViewModel, which gets data from Firebase DB.
+     * Read initial [size] of qualifications from ViewModel, which gets data from Firebase DB.
      */
     override fun readInitialQualificationsSize(size: Int) {
         initialQualificationsSize = size

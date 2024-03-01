@@ -33,7 +33,7 @@ class MatchViewModel(
 
     fun addJobQualification(category: String, jobQualification: String) {
         viewModelScope.launch {
-            when (val result = matchUseCases.readJobQualificationUseCase(category, jobQualification)) {
+            when (matchUseCases.readJobQualificationUseCase(category, jobQualification)) {
                 is UseCaseResult.Success -> {
                     setOfJobQualifications.add(JobQualificationDomainModel(category, jobQualification))
                 }
