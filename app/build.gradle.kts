@@ -4,6 +4,10 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 android {
     namespace = "com.liberostrategies.pinkyportfolio"
     compileSdk = 34
@@ -119,15 +123,28 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 
-
-
     // Logger
     implementation("co.touchlab:kermit:2.0.2")
 
+    // Testing
 //    testImplementation("junit:junit:4.13.2")
     implementation(kotlin("test-junit"))
+    testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation("io.mockk:mockk-android:1.13.2")
+    testImplementation("io.mockk:mockk-common:1.12.5") // KMM
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation("org.junit.platform:junit-platform-runner:1.9.1")
+    testImplementation("org.junit.platform:junit-platform-suite-api:1.9.1")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("com.google.truth.extensions:truth-java8-extension:1.1.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0") // Latest 3.5.0-alpha06
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")    // fails to find
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.3.0") // Matchers.
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
