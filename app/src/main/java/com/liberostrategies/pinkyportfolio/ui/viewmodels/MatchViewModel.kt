@@ -33,7 +33,7 @@ class MatchViewModel(
 
     fun addJobQualification(category: String, jobQualification: String) {
         viewModelScope.launch {
-            when (val result = matchUseCases.readJobQualificationUseCase(category, jobQualification)) {
+            when (matchUseCases.readJobQualificationUseCase(category, jobQualification)) {
                 is UseCaseResult.Success -> {
                     setOfJobQualifications.add(JobQualificationDomainModel(category, jobQualification))
                 }
@@ -46,7 +46,7 @@ class MatchViewModel(
 
     fun selectJobQualification(jobQualification: String) {
         val qual  = setOfJobQualifications.find {
-                q: JobQualificationDomainModel -> q.qualification == jobQualification
+            q: JobQualificationDomainModel -> q.qualification == jobQualification
         }
         qual?.selectForMatch(true)
     }
@@ -62,10 +62,10 @@ class MatchViewModel(
         return setOfJobQualifications
     }
 
-    fun setInitialQualificationsSize(size: Int) {
-        when (matchUseCases.readJobQualificationsSize(size)) {
+    fun setInitialQualificationsSize(initialQualificationSize: Int) {
+        when (matchUseCases.readJobQualificationsSize(initialQualificationSize)) {
             is UseCaseResult.Success -> {
-                Logger.e(this.javaClass.simpleName) { "Initial size = $size" }
+                Logger.e(this.javaClass.simpleName) { "Initial size = $initialQualificationSize" }
             }
             else -> {
                 Logger.e(this.javaClass.simpleName) { "Unhandled UseCase Result for reading the initial size." }
