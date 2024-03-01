@@ -46,7 +46,7 @@ class MatchViewModel(
 
     fun selectJobQualification(jobQualification: String) {
         val qual  = setOfJobQualifications.find {
-                q: JobQualificationDomainModel -> q.qualification == jobQualification
+            q: JobQualificationDomainModel -> q.qualification == jobQualification
         }
         qual?.selectForMatch(true)
     }

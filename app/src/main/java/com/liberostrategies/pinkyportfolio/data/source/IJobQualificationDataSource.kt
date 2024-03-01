@@ -16,7 +16,7 @@ interface IJobQualificationDataSource {
 
     fun readInitialQualificationsSize(size: Int)
 
-    suspend fun getListQualifications(): MutableList<JobQualificationDataModel>
+    fun getListQualifications(): MutableList<JobQualificationDataModel>
 
     fun matchQualificationsWithSkills(selectedJobQualificationsSize: Int): Int
 }

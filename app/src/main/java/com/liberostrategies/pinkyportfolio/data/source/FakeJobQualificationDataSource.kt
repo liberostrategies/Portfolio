@@ -14,7 +14,7 @@ class FakeJobQualificationDataSource : IJobQualificationDataSource {
         initialQualificationsSize = size
     }
 
-    override suspend fun getListQualifications(): MutableList<JobQualificationDataModel> {
+    override fun getListQualifications(): MutableList<JobQualificationDataModel> {
         return mListQualifications
     }
 

@@ -19,7 +19,7 @@ class FirebaseJobQualificationDataSource : IJobQualificationDataSource {
         mCollectionJobQualifications = db.collection("jobqualifications")
     }
 
-    override suspend fun getListQualifications(): MutableList<JobQualificationDataModel> {
+    override fun getListQualifications(): MutableList<JobQualificationDataModel> {
         return mListQualifications
     }
 
