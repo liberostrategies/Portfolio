@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.liberostrategies.pinkyportfolio.R
@@ -17,11 +18,13 @@ sealed class PortfolioScreen(
         val screens = listOf(
             Home,
             Resume,
+            Videos,
             Match
         )
 
         const val route_home = "home"
         const val route_resume = "resume"
+        const val route_videos = "videos"
         const val route_match = "match"
     }
 
@@ -35,6 +38,12 @@ sealed class PortfolioScreen(
         route_resume,
         R.string.resume,
         Icons.Filled.List
+    )
+
+    private object Videos : PortfolioScreen(
+        route_videos,
+        R.string.videos,
+        Icons.Filled.PlayArrow
     )
 
     private object Match : PortfolioScreen(
