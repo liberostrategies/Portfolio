@@ -3,23 +3,14 @@ package com.liberostrategies.pinkyportfolio.screens.videos
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
@@ -31,15 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.liberostrategies.pinkyportfolio.Job
 
-const val videoUriUnitTests = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-const val videoUriUiTests = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+const val videoUriTeamsPlay = "https://s3.us-east-2.amazonaws.com/liberostrategies.com/assets/videos/portfolio/TeamsPlayAndroid.mov"
+const val videoUriRealmDb = "https://s3.us-east-2.amazonaws.com/liberostrategies.com/assets/videos/portfolio/RealmDB.mov"
 @Composable
 fun VideosScreen(context: Context) {
 
@@ -55,26 +44,33 @@ fun VideosScreen(context: Context) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                VideoListItem(title = "JUnit Tests", videoUri = videoUriUnitTests)
+                VideoListItem(title = "Teams Play Demo", videoUri = videoUriTeamsPlay)
             }
             item {
-                VideoListItem(title = "Lint Unit Test Coverage", videoUri = videoUriUiTests)
+                VideoListItem(title = "Realm DB", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "MockK Tests", videoUri = videoUriUiTests)
+                VideoListItem(title = "JUnit Tests", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Fake Google Play Billing API Test", videoUri = videoUriUiTests)
+                VideoListItem(title = "Lint Unit Test Coverage", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Espresso Test", videoUri = videoUriUiTests)
+                VideoListItem(title = "MockK Tests", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Use Case Tests using Truth", videoUri = videoUriUiTests)
+                VideoListItem(title = "Fake Google Play Billing API Test", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Architecture Components Dependencies", videoUri = videoUriUiTests)
-            }        }
+                VideoListItem(title = "Espresso Test", videoUri = videoUriRealmDb)
+            }
+            item {
+                VideoListItem(title = "Use Case Tests using Truth", videoUri = videoUriRealmDb)
+            }
+            item {
+                VideoListItem(title = "Architecture Components Dependencies", videoUri = videoUriRealmDb)
+            }
+        }
 
         val isLandscape = false
         //val context = LocalContext.current
