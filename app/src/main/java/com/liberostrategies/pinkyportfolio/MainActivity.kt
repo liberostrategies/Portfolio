@@ -136,7 +136,7 @@ fun PortfolioNavHost(
             ResumeScreen(context = context)
         }
         composable(route = PortfolioScreen.route_videos) {
-            VideosScreen(context = context)
+            VideosScreen()
         }
         composable(PortfolioScreen.route_match) {
             MatchScreen(matchViewModel)
