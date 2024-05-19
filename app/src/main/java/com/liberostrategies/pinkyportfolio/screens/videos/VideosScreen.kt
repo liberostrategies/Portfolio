@@ -1,8 +1,6 @@
 package com.liberostrategies.pinkyportfolio.screens.videos
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.ActivityInfo
+import android.view.ViewGroup
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,16 +20,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.viewinterop.AndroidView
 
-const val videoUriTeamsPlay = "https://s3.us-east-2.amazonaws.com/liberostrategies.com/assets/videos/portfolio/TeamsPlayAndroid.mov"
-const val videoUriRealmDb = "https://s3.us-east-2.amazonaws.com/liberostrategies.com/assets/videos/portfolio/RealmDB.mov"
+const val videoUriTeamsPlay = "https://www.youtube.com/watch?v=xc8nAcVvpxY&pp=ygUPamV0cGFjayBjb21wb3Nl"
+const val videoUriRealmDb = "https://www.youtube.com/watch?v=xKmEOXZsU_0&pp=ygUeZ29vZ2xlIGlvIGtvdGxpbiBtdWx0aXBsYXRmb3Jt"
+
 @Composable
-fun VideosScreen(context: Context) {
-
+fun VideosScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,50 +40,33 @@ fun VideosScreen(context: Context) {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             item {
-                VideoListItem(title = "Teams Play Demo", videoUri = videoUriTeamsPlay)
+                VideoListItem(title = "WristAway App KMP Demo", videoUri = videoUriTeamsPlay)
+            }
+            item {
+                VideoListItem(title = "Architecture Components", videoUri = videoUriRealmDb)
             }
             item {
                 VideoListItem(title = "Realm DB", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "JUnit Tests", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Lint Unit Test Coverage", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: Lint Unit Test Coverage", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "MockK Tests", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: MockK", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Fake Google Play Billing API Test", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: Fake Google Play Billing API", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Espresso Test", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: Espresso", videoUri = videoUriRealmDb)
             }
             item {
-                VideoListItem(title = "Use Case Tests using Truth", videoUri = videoUriRealmDb)
-            }
-            item {
-                VideoListItem(title = "Architecture Components Dependencies", videoUri = videoUriRealmDb)
-            }
-        }
-
-        val isLandscape = false
-        //val context = LocalContext.current
-        val activity = context.findActivity()
-        val enterFullscreen = {
-            if (activity != null) {
-                activity.requestedOrientation =
-                    ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
-            }
-        }
-        val exitFullscreen = {
-            if (activity != null) {
-                @SuppressLint("SourceLockedOrientationActivity")
-                // Will reset to SCREEN_ORIENTATION_USER later
-                activity.requestedOrientation =
-                    ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+                VideoListItem(title = "Tests: Use Cases using Truth", videoUri = videoUriRealmDb)
             }
         }
     }
@@ -94,12 +74,12 @@ fun VideosScreen(context: Context) {
 
 @Composable
 fun VideoListItem(title: String, videoUri: String) {
-
     var openVideo by remember { mutableStateOf(false) }
+    var colorClicked by remember { mutableStateOf(Color.LightGray) }
 
     ElevatedCard(
         colors = CardDefaults.cardColors(
-            //containerColor = Color.Red,
+            containerColor = colorClicked,
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -116,19 +96,37 @@ fun VideoListItem(title: String, videoUri: String) {
             color = Color.Black,
             fontSize = 16.sp,
             lineHeight = 400.sp,
-            fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(5.dp),
         )
     }
 
     if (openVideo) {
-        Dialog (
-            onDismissRequest = { openVideo = false }
-        ) {
-            VideoPlayer(videoUri = videoUri, onClose = {
+        WebView(
+            videoUri,
+            onDismissRequest = {
                 openVideo = false
-            })
-        }
+                colorClicked = Color(red = 0, green = 102, blue = 139)
+            }
+        )
     }
+}
 
+@Composable
+fun WebView(
+    videoUri: String,
+    onDismissRequest: () -> Unit
+){
+    AndroidView(
+        factory = {
+            android.webkit.WebView(it).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            }},
+        update = {
+            it.loadUrl(videoUri)
+            onDismissRequest()
+        }
+    )
 }
