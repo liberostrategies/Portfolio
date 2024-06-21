@@ -3,11 +3,11 @@ package com.liberostrategies.pinkyportfolio.screens
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.liberostrategies.pinkyportfolio.R
+import com.liberostrategies.pinkyportfolio.ui.theme.KotlinLetterK
 
 sealed class PortfolioScreen(
     val route: String,
@@ -16,28 +16,28 @@ sealed class PortfolioScreen(
 ) {
     companion object {
         val screens = listOf(
-            Home,
-            Resume,
+            Resume, // Home screen
+            Kotlin,
             Videos,
             Match
         )
 
-        const val route_home = "home"
+        const val route_kotlin = "kotlin"
         const val route_resume = "resume"
         const val route_videos = "videos"
         const val route_match = "match"
     }
 
-    private object Home : PortfolioScreen(
-        route_home,
+    private object Kotlin : PortfolioScreen(
+        route_kotlin,
         R.string.kotlin_timeline,
-        Icons.Filled.Home
+        KotlinLetterK,
     )
 
     private object Resume : PortfolioScreen(
         route_resume,
         R.string.resume,
-        Icons.Filled.List
+        Icons.Filled.Home
     )
 
     private object Videos : PortfolioScreen(

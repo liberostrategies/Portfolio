@@ -126,14 +126,14 @@ fun PortfolioNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = PortfolioScreen.route_home,
+        startDestination = PortfolioScreen.route_resume,
         modifier = modifier
     ) {
-        composable(PortfolioScreen.route_home) {
-            KotlinTimelineScreen(matchViewModel, collectionJobQuals)
-        }
         composable(route = PortfolioScreen.route_resume) {
             ResumeScreen(context = context)
+        }
+        composable(PortfolioScreen.route_kotlin) {
+            KotlinTimelineScreen(matchViewModel, collectionJobQuals)
         }
         composable(route = PortfolioScreen.route_videos) {
             VideosScreen()
