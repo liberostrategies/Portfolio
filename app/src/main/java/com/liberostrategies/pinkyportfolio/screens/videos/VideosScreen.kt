@@ -24,10 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 
-const val videoUriTeamsPlay = "https://www.youtube.com/watch?v=xc8nAcVvpxY&pp=ygUPamV0cGFjayBjb21wb3Nl"
-const val videoUriRealmDb = "https://www.youtube.com/watch?v=xKmEOXZsU_0&pp=ygUeZ29vZ2xlIGlvIGtvdGxpbiBtdWx0aXBsYXRmb3Jt"
-const val videoUrlEspressoTests = "https://youtu.be/YkjZ5Ttat2s"
-const val videoUrlArchComponents = "https://youtu.be/Ks1U3FgSKRI"
 @Composable
 fun VideosScreen() {
     Column(
@@ -42,47 +38,44 @@ fun VideosScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            item { VideosTypeHeader(typeText = "Android WristAway App Videos") }
+            item { VideosTypeHeader(typeText = "Android WristAway App") }
             item {
-                VideoListItem(title = "WristAway App Kotlin Promo", videoUri = videoUriTeamsPlay)
+                VideoListItem(title = "WristAway App: Kotlin Promo", videoUri = "https://youtu.be/KmCuZ-RtRYE")
             }
             item {
-                VideoListItem(title = "Architecture Components", videoUri = videoUrlArchComponents)
+                VideoListItem(title = "WristAway App: Compose KMP (WIP)", videoUri = "https://youtu.be/YCdyUoyEF_8")
             }
             item {
-                VideoListItem(title = "Realm DB", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Architecture Components", videoUri = "https://youtu.be/Mn6LhYdnyLs")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: ScoreModes", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Realm DB", videoUri = "https://youtu.be/ntnJdEm2au4")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: DataSource", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit: ScoreModes", videoUri = "https://youtu.be/BuG9G-qJ5zM")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: DataModel", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit: DataSource", videoUri = "https://youtu.be/mSekyrEW4QM")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: RealmDbDataModel", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit: RealmDbDataModel", videoUri = "https://youtu.be/bl7ZIsCpbP4")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: Repo", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit: Repo", videoUri = "https://youtu.be/5E_heGeIXyQ")
             }
             item {
-                VideoListItem(title = "Tests: JUnit: DomainModel", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: JUnit: DomainModel", videoUri = "https://youtu.be/QIzF1MFiLHM")
             }
             item {
-                VideoListItem(title = "Tests: ViewModels", videoUri = videoUriRealmDb)
+                VideoListItem(title = "Tests: ViewModels", videoUri = "https://youtu.be/kpOmvfkUnas")
             }
             item {
-                VideoListItem(title = "Tests: Espresso", videoUri = videoUrlEspressoTests)
-            }
-            item {
-                VideoListItem(title = "WristAway App Compose KMP", videoUri = videoUriTeamsPlay)
+                VideoListItem(title = "Tests: Espresso", videoUri = "https://youtu.be/0GSlcdj0JRY")
             }
 
-            item { VideosTypeHeader(typeText = "QT/QML UI Views") }
+            item { VideosTypeHeader(typeText = "QT/QML UI Library") }
             item {
-                VideoListItem(title = "DeNovix Products", videoUri = "https://youtu.be/C4cQgTu-7wc")
+                VideoListItem(title = "DeNovix Life Sciences Lab Products", videoUri = "https://youtu.be/C4cQgTu-7wc")
             }
         }
     }
