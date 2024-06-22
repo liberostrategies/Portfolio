@@ -17,8 +17,8 @@ sealed class PortfolioScreen(
     companion object {
         val screens = listOf(
             Resume, // Home screen
-            Kotlin,
             Videos,
+            Kotlin,
             Match
         )
 
