@@ -48,12 +48,12 @@ fun KotlinTimelineScreen(
                     size = i
                 }
             } else {
-                Logger.e("KotlineTimelineScreen") { "No such document" }
+                Logger.e("KotlinTimelineScreen") { "No such document" }
             }
             matchViewModel.setInitialQualificationsSize(matchViewModel.getJobQualifications().size)
         }
         .addOnFailureListener { exception ->
-            Logger.e("KotlineTimelineScreen") { "Get failed with $exception" }
+            Logger.e("KotlinTimelineScreen") { "Get failed with $exception" }
             throw JobQualificationsDoNotExistException(exception.toString())
         }
 

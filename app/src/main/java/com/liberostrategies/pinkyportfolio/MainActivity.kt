@@ -49,7 +49,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -61,6 +60,7 @@ import com.liberostrategies.pinkyportfolio.screens.KotlinTimelineScreen
 import com.liberostrategies.pinkyportfolio.screens.MatchScreen
 import com.liberostrategies.pinkyportfolio.screens.PortfolioScreen
 import com.liberostrategies.pinkyportfolio.screens.ResumeScreen
+import com.liberostrategies.pinkyportfolio.screens.videos.VideosScreen
 import com.liberostrategies.pinkyportfolio.ui.theme.PinkyPortfolioTheme
 import com.liberostrategies.pinkyportfolio.ui.viewmodels.MatchViewModel
 
@@ -126,18 +126,17 @@ fun PortfolioNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = PortfolioScreen.route_home,
+        startDestination = PortfolioScreen.route_resume,
         modifier = modifier
     ) {
-        composable(PortfolioScreen.route_home) {
+        composable(route = PortfolioScreen.route_resume) {
+            ResumeScreen(context = context)
+        }
+        composable(PortfolioScreen.route_kotlin) {
             KotlinTimelineScreen(matchViewModel, collectionJobQuals)
         }
-        composable(
-            route = PortfolioScreen.route_resume,
-        ) {
-            ResumeScreen(
-                context = context
-            )
+        composable(route = PortfolioScreen.route_videos) {
+            VideosScreen()
         }
         composable(PortfolioScreen.route_match) {
             MatchScreen(matchViewModel)
