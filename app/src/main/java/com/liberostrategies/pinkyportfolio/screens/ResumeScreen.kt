@@ -94,17 +94,17 @@ fun ResumeScreen(
             item { SkillsAndTech(resumeDoc.document("skillsAndTechnology")) }
 
             item { SectionHeader(headerText = "Performance Highlights")}
-            for (i in 0..performanceHighlightCount) {
+            for (i in 0..<performanceHighlightCount) {
                 item { PerformanceHighlight(i, resumeDoc.document("performanceHighlights")) }
             }
 
             item { SectionHeader(headerText = "Experience")}
-            for (i in 0..companyCount) {
+            for (i in 0..<companyCount) {
                 item { Company(i, docCompanies) }
             }
 
             item { SectionHeader(headerText = "Certifications & Education")}
-            for (i in 0..certificationCount) {
+            for (i in 0..<certificationCount) {
                 item { Certification(i, resumeDoc.document("certificationsAndEducation")) }
             }
             item { College(resumeDoc.document("certificationsAndEducation"))}
