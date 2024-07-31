@@ -12,6 +12,11 @@ This Portfolio App showcases my Kotlin experience in consideration of employment
 
 * Learned Qt/QML/C++ and other skills independently in previous positions, and so demonstrate my ability to grasp emerging technologies with the needs of the business. 
 
+# Videos
+View demos, tests, design, and code snippets showcasing my professional software development skills in Kotlin (Wear OS, Multiplatform, Jetpack and Multiplatform Compose) on Android as well as Qt/QML on Raspberry Pi devices.
+
+https://www.youtube.com/playlist?list=PLOIBNcBIDPkWjx27UW80K2yzLk8tld84V
+
 # Android Experience Overview
 * Part-Time Past-Time Hobby
   * As avid volleyball player, built a scoring app starting on Wear OS.
