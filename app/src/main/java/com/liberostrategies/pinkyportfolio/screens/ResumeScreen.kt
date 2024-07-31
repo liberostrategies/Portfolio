@@ -99,12 +99,12 @@ fun ResumeScreen(
             }
 
             item { SectionHeader(headerText = "Experience")}
-            for (i in 0..<companyCount) {
+            for (i in (companyCount - 1) downTo 0) {
                 item { Company(i, docCompanies) }
             }
 
             item { SectionHeader(headerText = "Certifications & Education")}
-            for (i in 0..<certificationCount) {
+            for (i in (certificationCount - 1) downTo 0) {
                 item { Certification(i, resumeDoc.document("certificationsAndEducation")) }
             }
             item { College(resumeDoc.document("certificationsAndEducation"))}
